@@ -24,13 +24,14 @@ namespace TestAPI
                 SpotifyWebAPI api = new SpotifyWebAPI(){ TokenType = payload.TokenType, AccessToken = payload.AccessToken };
 
                 // Do requests with API client
-                Paging<FullTrack> histories =  api.GetUsersTopTracks();
-                histories.Items.ForEach(item => Console.WriteLine(item.Name));
 
                 TuneableTrack tar = new TuneableTrack();
                 tar.Popularity = 100;
-                Recommendations rec = api.GetRecommendations(genreSeed: new List<string> { "rock" }, target: tar, market: "US");
-                rec.Tracks.ForEach(track => Console.WriteLine(track.Name + ':' + track.Artists));
+                Recommendations rec = api.GetRecommendations(genreSeed: new List<string> { "rock", "rap" }, target: tar, market: "US");
+                rec.Tracks.ForEach(track => {
+                    Console.Write(track.Name + " : ");
+                    track.Artists.ForEach(artist => Console.Write(artist.Name + "\n"));
+                });
             };
 
             auth.Start(); // Start an internal HTTP Server
