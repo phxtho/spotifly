@@ -3,6 +3,7 @@ using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace TestAPI
 { 
@@ -25,6 +26,11 @@ namespace TestAPI
                 // Do requests with API client
                 Paging<FullTrack> histories =  api.GetUsersTopTracks();
                 histories.Items.ForEach(item => Console.WriteLine(item.Name));
+
+                TuneableTrack tar = new TuneableTrack();
+                tar.Popularity = 100;
+                Recommendations rec = api.GetRecommendations(genreSeed: new List<string> { "rock" }, target: tar, market: "US");
+                rec.Tracks.ForEach(track => Console.WriteLine(track.Name + ':' + track.Artists));
             };
 
             auth.Start(); // Start an internal HTTP Server
