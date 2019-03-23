@@ -22,6 +22,7 @@ namespace Spotifly
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            SpotiflyDB._ConnectionString = Configuration.GetConnectionString("Default");
         }
 
         public IConfiguration Configuration { get; }

@@ -38,6 +38,7 @@ namespace Spotifly.Controllers
 
 
             auth.OpenBrowser();
+            ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
 
