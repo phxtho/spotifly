@@ -1,114 +1,203 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using SpotifyAPI.Web.Enums;
 using SpotifyAPI.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SpotifyAPI.Web
 {
     public interface ISpotifyWebAPI
     {
-        #region Search
+        string AccessToken { get; set; }
+        int RetryAfter { get; set; }
+        IEnumerable<int> RetryErrorCodes { get; set; }
+        int RetryTimes { get; set; }
+        string TokenType { get; set; }
+        bool TooManyRequestsConsumesARetry { get; set; }
+        bool UseAuth { get; set; }
+        bool UseAutoRetry { get; set; }
+        IClient WebClient { get; set; }
 
-        SearchItem SearchItems(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
-
-        Task<SearchItem> SearchItemsAsync(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
-
-        SearchItem SearchItemsEscaped(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
-
-        Task<SearchItem> SearchItemsEscapedAsync(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
-
-        #endregion
-
-        #region Albums
-
-        Paging<SimpleTrack> GetAlbumTracks(string id, int limit = 20, int offset = 0, string market = "");
-
-        Task<Paging<SimpleTrack>> GetAlbumTracksAsync(string id, int limit = 20, int offset = 0, string market = "");
-
-        FullAlbum GetAlbum(string id, string market = "");
-
-        Task<FullAlbum> GetAlbumAsync(string id, string market = "");
-
-        SeveralAlbums GetSeveralAlbums(List<string> ids, string market = "");
-
-        Task<SeveralAlbums> GetSeveralAlbumsAsync(List<string> ids, string market = "");
-
-        #endregion
-
-        #region Artists
-
-        FullArtist GetArtist(string id);
-
-        Task<FullArtist> GetArtistAsync(string id);
-
-        SeveralArtists GetRelatedArtists(string id);
-
-        Task<SeveralArtists> GetRelatedArtistsAsync(string id);
-
-        SeveralTracks GetArtistsTopTracks(string id, string country);
-
-        Task<SeveralTracks> GetArtistsTopTracksAsync(string id, string country);
-
-        Paging<SimpleAlbum> GetArtistsAlbums(string id, AlbumType type = AlbumType.All, int limit = 20, int offset = 0, string market = "");
-
-        Task<Paging<SimpleAlbum>> GetArtistsAlbumsAsync(string id, AlbumType type = AlbumType.All, int limit = 20, int offset = 0, string market = "");
-
-        SeveralArtists GetSeveralArtists(List<string> ids);
-
-        Task<SeveralArtists> GetSeveralArtistsAsync(List<string> ids);
-
-        #endregion
-
-        #region Personalization
-
-        Paging<FullTrack> GetUsersTopTracks(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
-
-        Task<Paging<FullTrack>> GetUsersTopTracksAsync(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
-
-        Paging<FullArtist> GetUsersTopArtists(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
-
-        Task<Paging<FullArtist>> GetUsersTopArtistsAsync(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
-
-        CursorPaging<PlayHistory> GetUsersRecentlyPlayedTracks(int limit = 20, DateTime? after = null,
-            DateTime? before = null);
-
-        Task<CursorPaging<PlayHistory>> GetUsersRecentlyPlayedTracksAsync(int limit = 20, DateTime? after = null,
-            DateTime? before = null);
-
-        #endregion
-
-        #region Playlist
-
-        Paging<SimplePlaylist> GetUserPlaylists(string userId, int limit = 20, int offset = 0);
-
-        Task<Paging<SimplePlaylist>> GetUserPlaylistsAsync(string userId, int limit = 20, int offset = 0);
-
-        FullPlaylist GetPlaylist(string userId, string playlistId, string fields = "", string market = "");
-
-        FullPlaylist GetPlaylist(string playlistId, string fields = "", string market = "");
-
-        Task<FullPlaylist> GetPlaylistAsync(string playlistId, string fields = "", string market = "");
-
-        Paging<PlaylistTrack> GetPlaylistTracks(string playlistId, string fields = "", int limit = 100, int offset = 0, string market = "");
-
+        ErrorResponse AddPlaylistTrack(string playlistId, string uri, int? position = null);
+        ErrorResponse AddPlaylistTrack(string userId, string playlistId, string uri, int? position = null);
+        Task<ErrorResponse> AddPlaylistTrackAsync(string playlistId, string uri, int? position = null);
+        Task<ErrorResponse> AddPlaylistTrackAsync(string userId, string playlistId, string uri, int? position = null);
+        ErrorResponse AddPlaylistTracks(string playlistId, List<string> uris, int? position = null);
+        ErrorResponse AddPlaylistTracks(string userId, string playlistId, List<string> uris, int? position = null);
+        Task<ErrorResponse> AddPlaylistTracksAsync(string playlistId, List<string> uris, int? position = null);
+        Task<ErrorResponse> AddPlaylistTracksAsync(string userId, string playlistId, List<string> uris, int? position = null);
+        ListResponse<bool> CheckSavedAlbums(List<string> ids);
+        Task<ListResponse<bool>> CheckSavedAlbumsAsync(List<string> ids);
+        ListResponse<bool> CheckSavedTracks(List<string> ids);
+        Task<ListResponse<bool>> CheckSavedTracksAsync(List<string> ids);
         FullPlaylist CreatePlaylist(string userId, string playlistName, bool isPublic = true, bool isCollaborative = false, string playlistDescription = "");
-
         Task<FullPlaylist> CreatePlaylistAsync(string userId, string playlistName, bool isPublic = true, bool isCollaborative = false, string playlistDescription = "");
-
+        void Dispose();
+        T DownloadData<T>(string url) where T : BasicModel;
+        Task<T> DownloadDataAsync<T>(string url) where T : BasicModel;
+        ErrorResponse Follow(FollowType followType, List<string> ids);
+        ErrorResponse Follow(FollowType followType, string id);
+        Task<ErrorResponse> FollowAsync(FollowType followType, List<string> ids);
+        Task<ErrorResponse> FollowAsync(FollowType followType, string id);
+        ErrorResponse FollowPlaylist(string ownerId, string playlistId, bool showPublic = true);
+        Task<ErrorResponse> FollowPlaylistAsync(string ownerId, string playlistId, bool showPublic = true);
+        FullAlbum GetAlbum(string id, string market = "");
+        Task<FullAlbum> GetAlbumAsync(string id, string market = "");
+        Paging<SimpleTrack> GetAlbumTracks(string id, int limit = 20, int offset = 0, string market = "");
+        Task<Paging<SimpleTrack>> GetAlbumTracksAsync(string id, int limit = 20, int offset = 0, string market = "");
+        FullArtist GetArtist(string id);
+        Task<FullArtist> GetArtistAsync(string id);
+        Paging<SimpleAlbum> GetArtistsAlbums(string id, AlbumType type = AlbumType.All, int limit = 20, int offset = 0, string market = "");
+        Task<Paging<SimpleAlbum>> GetArtistsAlbumsAsync(string id, AlbumType type = AlbumType.All, int limit = 20, int offset = 0, string market = "");
+        SeveralTracks GetArtistsTopTracks(string id, string country);
+        Task<SeveralTracks> GetArtistsTopTracksAsync(string id, string country);
+        AudioAnalysis GetAudioAnalysis(string id);
+        Task<AudioAnalysis> GetAudioAnalysisAsync(string id);
+        AudioFeatures GetAudioFeatures(string id);
+        Task<AudioFeatures> GetAudioFeaturesAsync(string id);
+        CategoryList GetCategories(string country = "", string locale = "", int limit = 20, int offset = 0);
+        Task<CategoryList> GetCategoriesAsync(string country = "", string locale = "", int limit = 20, int offset = 0);
+        Category GetCategory(string categoryId, string country = "", string locale = "");
+        Task<Category> GetCategoryAsync(string categoryId, string country = "", string locale = "");
+        CategoryPlaylist GetCategoryPlaylists(string categoryId, string country = "", int limit = 20, int offset = 0);
+        Task<CategoryPlaylist> GetCategoryPlaylistsAsync(string categoryId, string country = "", int limit = 20, int offset = 0);
+        AvailabeDevices GetDevices();
+        Task<AvailabeDevices> GetDevicesAsync();
+        FeaturedPlaylists GetFeaturedPlaylists(string locale = "", string country = "", DateTime timestamp = default(DateTime), int limit = 20, int offset = 0);
+        Task<FeaturedPlaylists> GetFeaturedPlaylistsAsync(string locale = "", string country = "", DateTime timestamp = default(DateTime), int limit = 20, int offset = 0);
+        FollowedArtists GetFollowedArtists(FollowType followType, int limit = 20, string after = "");
+        Task<FollowedArtists> GetFollowedArtistsAsync(FollowType followType, int limit = 20, string after = "");
+        NewAlbumReleases GetNewAlbumReleases(string country = "", int limit = 20, int offset = 0);
+        Task<NewAlbumReleases> GetNewAlbumReleasesAsync(string country = "", int limit = 20, int offset = 0);
+        Paging<T> GetNextPage<T>(Paging<T> paging);
+        TOut GetNextPage<TOut, TIn>(Paging<TIn> paging) where TOut : BasicModel;
+        Task<Paging<T>> GetNextPageAsync<T>(Paging<T> paging);
+        Task<TOut> GetNextPageAsync<TOut, TIn>(Paging<TIn> paging) where TOut : BasicModel;
+        PlaybackContext GetPlayback(string market = "");
+        Task<PlaybackContext> GetPlaybackAsync(string market = "");
+        PlaybackContext GetPlayingTrack(string market = "");
+        Task<PlaybackContext> GetPlayingTrackAsync(string market = "");
+        FullPlaylist GetPlaylist(string playlistId, string fields = "", string market = "");
+        FullPlaylist GetPlaylist(string userId, string playlistId, string fields = "", string market = "");
+        Task<FullPlaylist> GetPlaylistAsync(string playlistId, string fields = "", string market = "");
+        Task<FullPlaylist> GetPlaylistAsync(string userId, string playlistId, string fields = "", string market = "");
+        Paging<PlaylistTrack> GetPlaylistTracks(string playlistId, string fields = "", int limit = 100, int offset = 0, string market = "");
+        Paging<PlaylistTrack> GetPlaylistTracks(string userId, string playlistId, string fields = "", int limit = 100, int offset = 0, string market = "");
+        Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(string playlistId, string fields = "", int limit = 100, int offset = 0, string market = "");
+        Task<Paging<PlaylistTrack>> GetPlaylistTracksAsync(string userId, string playlistId, string fields = "", int limit = 100, int offset = 0, string market = "");
+        Paging<T> GetPreviousPage<T>(Paging<T> paging);
+        TOut GetPreviousPage<TOut, TIn>(Paging<TIn> paging) where TOut : BasicModel;
+        Task<Paging<T>> GetPreviousPageAsync<T>(Paging<T> paging);
+        Task<TOut> GetPreviousPageAsync<TOut, TIn>(Paging<TIn> paging) where TOut : BasicModel;
+        PrivateProfile GetPrivateProfile();
+        Task<PrivateProfile> GetPrivateProfileAsync();
+        PublicProfile GetPublicProfile(string userId);
+        Task<PublicProfile> GetPublicProfileAsync(string userId);
+        Recommendations GetRecommendations(List<string> artistSeed = null, List<string> genreSeed = null, List<string> trackSeed = null, TuneableTrack target = null, TuneableTrack min = null, TuneableTrack max = null, int limit = 20, string market = "");
+        Task<Recommendations> GetRecommendationsAsync(List<string> artistSeed = null, List<string> genreSeed = null, List<string> trackSeed = null, TuneableTrack target = null, TuneableTrack min = null, TuneableTrack max = null, int limit = 20, string market = "");
+        RecommendationSeedGenres GetRecommendationSeedsGenres();
+        Task<RecommendationSeedGenres> GetRecommendationSeedsGenresAsync();
+        SeveralArtists GetRelatedArtists(string id);
+        Task<SeveralArtists> GetRelatedArtistsAsync(string id);
+        Paging<SavedAlbum> GetSavedAlbums(int limit = 20, int offset = 0, string market = "");
+        Task<Paging<SavedAlbum>> GetSavedAlbumsAsync(int limit = 20, int offset = 0, string market = "");
+        Paging<SavedTrack> GetSavedTracks(int limit = 20, int offset = 0, string market = "");
+        Task<Paging<SavedTrack>> GetSavedTracksAsync(int limit = 20, int offset = 0, string market = "");
+        SeveralAlbums GetSeveralAlbums(List<string> ids, string market = "");
+        Task<SeveralAlbums> GetSeveralAlbumsAsync(List<string> ids, string market = "");
+        SeveralArtists GetSeveralArtists(List<string> ids);
+        Task<SeveralArtists> GetSeveralArtistsAsync(List<string> ids);
+        SeveralAudioFeatures GetSeveralAudioFeatures(List<string> ids);
+        Task<SeveralAudioFeatures> GetSeveralAudioFeaturesAsync(List<string> ids);
+        SeveralTracks GetSeveralTracks(List<string> ids, string market = "");
+        Task<SeveralTracks> GetSeveralTracksAsync(List<string> ids, string market = "");
+        FullTrack GetTrack(string id, string market = "");
+        Task<FullTrack> GetTrackAsync(string id, string market = "");
+        Paging<SimplePlaylist> GetUserPlaylists(string userId, int limit = 20, int offset = 0);
+        Task<Paging<SimplePlaylist>> GetUserPlaylistsAsync(string userId, int limit = 20, int offset = 0);
+        CursorPaging<PlayHistory> GetUsersRecentlyPlayedTracks(int limit = 20, DateTime? after = null, DateTime? before = null);
+        Task<CursorPaging<PlayHistory>> GetUsersRecentlyPlayedTracksAsync(int limit = 20, DateTime? after = null, DateTime? before = null);
+        Paging<FullArtist> GetUsersTopArtists(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
+        Task<Paging<FullArtist>> GetUsersTopArtistsAsync(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
+        Paging<FullTrack> GetUsersTopTracks(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
+        Task<Paging<FullTrack>> GetUsersTopTracksAsync(TimeRangeType timeRange = TimeRangeType.MediumTerm, int limit = 20, int offest = 0);
+        ListResponse<bool> IsFollowing(FollowType followType, List<string> ids);
+        ListResponse<bool> IsFollowing(FollowType followType, string id);
+        Task<ListResponse<bool>> IsFollowingAsync(FollowType followType, List<string> ids);
+        Task<ListResponse<bool>> IsFollowingAsync(FollowType followType, string id);
+        ListResponse<bool> IsFollowingPlaylist(string ownerId, string playlistId, List<string> ids);
+        ListResponse<bool> IsFollowingPlaylist(string ownerId, string playlistId, string id);
+        Task<ListResponse<bool>> IsFollowingPlaylistAsync(string ownerId, string playlistId, List<string> ids);
+        Task<ListResponse<bool>> IsFollowingPlaylistAsync(string ownerId, string playlistId, string id);
+        ErrorResponse PausePlayback(string deviceId = "");
+        Task<ErrorResponse> PausePlaybackAsync(string deviceId = "");
+        ErrorResponse RemovePlaylistTrack(string playlistId, DeleteTrackUri uri);
+        ErrorResponse RemovePlaylistTrack(string userId, string playlistId, DeleteTrackUri uri);
+        Task<ErrorResponse> RemovePlaylistTrackAsync(string playlistId, DeleteTrackUri uri);
+        Task<ErrorResponse> RemovePlaylistTrackAsync(string userId, string playlistId, DeleteTrackUri uri);
+        ErrorResponse RemovePlaylistTracks(string playlistId, List<DeleteTrackUri> uris);
+        ErrorResponse RemovePlaylistTracks(string userId, string playlistId, List<DeleteTrackUri> uris);
+        Task<ErrorResponse> RemovePlaylistTracksAsync(string playlistId, List<DeleteTrackUri> uris);
+        Task<ErrorResponse> RemovePlaylistTracksAsync(string userId, string playlistId, List<DeleteTrackUri> uris);
+        ErrorResponse RemoveSavedAlbums(List<string> ids);
+        Task<ErrorResponse> RemoveSavedAlbumsAsync(List<string> ids);
+        ErrorResponse RemoveSavedTracks(List<string> ids);
+        Task<ErrorResponse> RemoveSavedTracksAsync(List<string> ids);
+        Snapshot ReorderPlaylist(string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "");
+        Snapshot ReorderPlaylist(string userId, string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "");
+        Task<Snapshot> ReorderPlaylistAsync(string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "");
+        Task<Snapshot> ReorderPlaylistAsync(string userId, string playlistId, int rangeStart, int insertBefore, int rangeLength = 1, string snapshotId = "");
+        ErrorResponse ReplacePlaylistTracks(string playlistId, List<string> uris);
+        ErrorResponse ReplacePlaylistTracks(string userId, string playlistId, List<string> uris);
+        Task<ErrorResponse> ReplacePlaylistTracksAsync(string playlistId, List<string> uris);
+        Task<ErrorResponse> ReplacePlaylistTracksAsync(string userId, string playlistId, List<string> uris);
+        ErrorResponse ResumePlayback(string deviceId = "", string contextUri = "", List<string> uris = null, int? offset = null, int positionMs = 0);
+        ErrorResponse ResumePlayback(string deviceId = "", string contextUri = "", List<string> uris = null, string offset = "", int positionMs = 0);
+        Task<ErrorResponse> ResumePlaybackAsync(string deviceId = "", string contextUri = "", List<string> uris = null, int? offset = null, int positionMs = 0);
+        Task<ErrorResponse> ResumePlaybackAsync(string deviceId = "", string contextUri = "", List<string> uris = null, string offset = "", int positionMs = 0);
+        ErrorResponse SaveAlbum(string id);
+        Task<ErrorResponse> SaveAlbumAsync(string id);
+        ErrorResponse SaveAlbums(List<string> ids);
+        Task<ErrorResponse> SaveAlbumsAsync(List<string> ids);
+        ErrorResponse SaveTrack(string id);
+        Task<ErrorResponse> SaveTrackAsync(string id);
+        ErrorResponse SaveTracks(List<string> ids);
+        Task<ErrorResponse> SaveTracksAsync(List<string> ids);
+        SearchItem SearchItems(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
+        Task<SearchItem> SearchItemsAsync(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
+        SearchItem SearchItemsEscaped(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
+        Task<SearchItem> SearchItemsEscapedAsync(string q, SearchType type, int limit = 20, int offset = 0, string market = "");
+        ErrorResponse SeekPlayback(int positionMs, string deviceId = "");
+        Task<ErrorResponse> SeekPlaybackAsync(int positionMs, string deviceId = "");
+        ErrorResponse SetRepeatMode(RepeatState state, string deviceId = "");
+        Task<ErrorResponse> SetRepeatModeAsync(RepeatState state, string deviceId = "");
+        ErrorResponse SetShuffle(bool shuffle, string deviceId = "");
+        Task<ErrorResponse> SetShuffleAsync(bool shuffle, string deviceId = "");
+        ErrorResponse SetVolume(int volumePercent, string deviceId = "");
+        Task<ErrorResponse> SetVolumeAsync(int volumePercent, string deviceId = "");
+        ErrorResponse SkipPlaybackToNext(string deviceId = "");
+        Task<ErrorResponse> SkipPlaybackToNextAsync(string deviceId = "");
+        ErrorResponse SkipPlaybackToPrevious(string deviceId = "");
+        Task<ErrorResponse> SkipPlaybackToPreviousAsync(string deviceId = "");
+        ErrorResponse TransferPlayback(List<string> deviceIds, bool play = false);
+        ErrorResponse TransferPlayback(string deviceId, bool play = false);
+        Task<ErrorResponse> TransferPlaybackAsync(List<string> deviceIds, bool play = false);
+        Task<ErrorResponse> TransferPlaybackAsync(string deviceId, bool play = false);
+        ErrorResponse Unfollow(FollowType followType, List<string> ids);
+        ErrorResponse Unfollow(FollowType followType, string id);
+        Task<ErrorResponse> UnfollowAsync(FollowType followType, List<string> ids);
+        Task<ErrorResponse> UnfollowAsync(FollowType followType, string id);
+        ErrorResponse UnfollowPlaylist(string ownerId, string playlistId);
+        Task<ErrorResponse> UnfollowPlaylistAsync(string ownerId, string playlistId);
         ErrorResponse UpdatePlaylist(string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null);
-
+        ErrorResponse UpdatePlaylist(string userId, string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null);
         Task<ErrorResponse> UpdatePlaylistAsync(string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null);
-
+        Task<ErrorResponse> UpdatePlaylistAsync(string userId, string playlistId, string newName = null, bool? newPublic = null, bool? newCollaborative = null, string newDescription = null);
+        T UploadData<T>(string url, string uploadData, string method = "POST") where T : BasicModel;
+        Task<T> UploadDataAsync<T>(string url, string uploadData, string method = "POST") where T : BasicModel;
+        ErrorResponse UploadPlaylistImage(string playlistId, string base64EncodedJpgImage);
         ErrorResponse UploadPlaylistImage(string userId, string playlistId, string base64EncodedJpgImage);
-
-        Task<ErrorResponse> UploadPlaylistImageAsync(string userId, string playlistId, string base64EncodedJpgImage)
-
-        #endregion
+        Task<ErrorResponse> UploadPlaylistImageAsync(string playlistId, string base64EncodedJpgImage);
+        Task<ErrorResponse> UploadPlaylistImageAsync(string userId, string playlistId, string base64EncodedJpgImage);
     }
 }
