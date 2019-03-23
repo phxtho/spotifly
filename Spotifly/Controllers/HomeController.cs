@@ -26,6 +26,13 @@ namespace Spotifly.Controllers
         private static string _redirectUri = "http://localhost:4002";
         private static string serverUri = "http://localhost:4002";
 
+        private IDisposable _spotifyWebAPI;
+
+        public HomeController(IDisposable spotifyWebAPI)
+        {
+            _spotifyWebAPI = spotifyWebAPI;
+        }
+
         public IActionResult Index()
         {
             // Authentication first
@@ -33,10 +40,13 @@ namespace Spotifly.Controllers
                                                                                              Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead | 
                                                                                              Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
                                                                                              Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
+            auth.AuthReceived += async (sender, payload) =>
+            {
+                auth.Stop(); // 'sender' is also the auth instance
+               // _spotifyWebAPI. { TokenType = payload.TokenType, AccessToken = payload.AccessToken };
+            };
 
             auth.Start(); // Start an internal HTTP Server
-
-
             auth.OpenBrowser();
             return View();
         }
