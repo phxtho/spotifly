@@ -41,6 +41,10 @@ namespace Spotifly.Controllers
 
             auth.Start(); // Start an internal HTTP Server
             auth.OpenBrowser();*/
+
+
+            auth.OpenBrowser();
+            ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
 
