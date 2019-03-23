@@ -9,7 +9,7 @@ CONSTRAINT PK_PLAYLIST_ID PRIMARY KEY(id),
 CONSTRAINT FOREIGN KEY(owner_id) REFERENCES `user`(id)
 );
 
-CREATE TABLE playlist_tracks (
+CREATE TABLE playlist_track (
 playlist_id BIGINT NOT NULL,
 track_id BIGINT NOT NULL,
 CONSTRAINT PRIMARY KEY(playlist_id, track_id),
