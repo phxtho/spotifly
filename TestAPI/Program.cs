@@ -24,7 +24,6 @@ namespace TestAPI
                 SpotifyWebAPI api = new SpotifyWebAPI(){ TokenType = payload.TokenType, AccessToken = payload.AccessToken };
 
                 // Do requests with API client
-
                 TuneableTrack tar = new TuneableTrack();
                 tar.Popularity = 100;
                 Recommendations rec = api.GetRecommendations(genreSeed: new List<string> { "rock", "rap" }, target: tar, market: "US");

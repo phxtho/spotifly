@@ -16,9 +16,15 @@ namespace Spotifly.Models
         private static string _redirectUri = "http://localhost:4002";
         private static string serverUri = "http://localhost:4002";
 
+        private ISpotifyWebAPI _spotifyWebAPI;
         public SpotifyAuth(ISpotifyWebAPI spotifyWebAPI)
         {
-            ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserTopRead);
+            _spotifyWebAPI = spotifyWebAPI;
+
+            ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate |
+                                                                                             Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead |
+                                                                                             Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
+                                                                                             Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
             auth.AuthReceived += AuthOnAuthReceived;
             auth.Start();
             auth.OpenBrowser();
@@ -26,7 +32,10 @@ namespace Spotifly.Models
 
         private void AuthOnAuthReceived(object sender, Token payload)
         {
-            throw new NotImplementedException();
+            ImplicitGrantAuth auth = (ImplicitGrantAuth)sender;
+
+            _spotifyWebAPI.TokenType = payload.TokenType;
+            _spotifyWebAPI.AccessToken = payload.AccessToken;
         }
     }
 }

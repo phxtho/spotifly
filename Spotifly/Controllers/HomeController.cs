@@ -28,22 +28,15 @@ namespace Spotifly.Controllers
 
         public IActionResult Index()
         {
-            // Authentication first
-           /* ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate | 
-                                                                                             Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead | 
-                                                                                             Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
-                                                                                             Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
-            auth.AuthReceived += async (sender, payload) =>
-            {
-                auth.Stop(); // 'sender' is also the auth instance
-               // _spotifyWebAPI. { TokenType = payload.TokenType, AccessToken = payload.AccessToken };
-            };
+            SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
 
-            auth.Start(); // Start an internal HTTP Server
-            auth.OpenBrowser();*/
+            User user = new User();
 
+            var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
 
-            auth.OpenBrowser();
+            user.Name = userSpotifyProfile.DisplayName;
+            user.Email = userSpotifyProfile.Email;
+
             ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
