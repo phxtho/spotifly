@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using SpotifyAPI.Web;
+using SpotifyAPI.Web.Auth;
+using SpotifyAPI.Web.Models;
+using SpotifyAPI.Web.Enums;
+
 namespace Spotifly
 {
     public class Startup
@@ -33,6 +38,8 @@ namespace Spotifly
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

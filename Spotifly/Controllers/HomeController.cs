@@ -12,6 +12,11 @@ using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web.Enums;
 
+//ChartJs
+using ChartJSCore.Models;
+
+using Spotifly.Models;
+
 namespace Spotifly.Controllers
 {
     public class HomeController : Controller
@@ -30,6 +35,8 @@ namespace Spotifly.Controllers
                                                                                              Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
 
             auth.Start(); // Start an internal HTTP Server
+
+
             auth.OpenBrowser();
             return View();
         }
@@ -41,6 +48,10 @@ namespace Spotifly.Controllers
 
         public IActionResult Dashboard()
         {
+            Chart pieChart = GeneratePieChart();
+
+            ViewData["PieChart"] = pieChart;
+
             return View();
         }
 
@@ -53,6 +64,30 @@ namespace Spotifly.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public static Chart GeneratePieChart()
+        {
+            Chart chart = new Chart();
+            chart.Type = "pie";
+
+            Data data = new Data();
+            data.Labels = new List<string>() { "Red", "Blue", "Yellow" };
+
+            PieDataset dataset = new PieDataset()
+            {
+                Label = "My dataset",
+                BackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
+                HoverBackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
+                Data = new List<double>() { 300, 50, 100 }
+            };
+
+            data.Datasets = new List<Dataset>();
+            data.Datasets.Add(dataset);
+
+            chart.Data = data;
+
+            return chart;
         }
     }
 }
