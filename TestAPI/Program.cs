@@ -17,7 +17,7 @@ namespace TestAPI
         static void Main(string[] args)
         {
             // Authentication first
-            ImplictGrantAuth auth = new ImplictGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserTopRead);
+            ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserTopRead);
             auth.AuthReceived += async (sender, payload) =>
             {
                 auth.Stop(); // 'sender' is also the auth instance
