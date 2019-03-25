@@ -15,29 +15,28 @@ using SpotifyAPI.Web.Enums;
 //ChartJs
 using ChartJSCore.Models;
 
-using Spotifly.Models;
-
 namespace Spotifly.Controllers
 {
     public class HomeController : Controller
     {
-        //App details specified on my spotify developer dashboard
-        private static string _clientId = "82bf63bc11194431afc9b8ad2f245bd3";
-        private static string _redirectUri = "http://localhost:4002";
-        private static string serverUri = "http://localhost:4002";
+        private ISpotifyWebAPI _spotifyWebAPI;
+
+        public HomeController(ISpotifyWebAPI spotifyWebAPI)
+        {
+            _spotifyWebAPI = spotifyWebAPI;
+        }
 
         public IActionResult Index()
         {
-            // Authentication first
-            ImplictGrantAuth auth = new ImplictGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate | 
-                                                                                             Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead | 
-                                                                                             Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
-                                                                                             Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
+            SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
 
-            auth.Start(); // Start an internal HTTP Server
+            User user = new User();
 
+            var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
 
-            auth.OpenBrowser();
+            user.Name = userSpotifyProfile.DisplayName;
+            user.Email = userSpotifyProfile.Email;
+
             ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
