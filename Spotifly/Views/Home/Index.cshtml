@@ -1,17 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <div class= "dashboard">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    @if (ViewData["Users"] != null)
-    {
-        @foreach (Spotifly.Models.User item in (List<Spotifly.Models.User>)ViewData["Users"])
-        {
-            <li>@item.Name</li>
-        }
+    <h1>Dashboard</h1>
+
+    <div><canvas id="pieChart"></canvas></div>
+
+    @{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; }
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+        <script>
+        @Html.Raw(pieChart.CreateChartCode("pieChart"));
+        </script>
     }
-    </div>
-</div>

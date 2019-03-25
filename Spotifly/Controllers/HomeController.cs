@@ -26,10 +26,16 @@ namespace Spotifly.Controllers
             _spotifyWebAPI = spotifyWebAPI;
         }
 
+        [Route("Home/Index")]
+        [Route("Home/")]
+        [Route("")]
         public IActionResult Index()
         {
-            SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
-
+            if (_spotifyWebAPI.AccessToken == null)
+            {
+                SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
+            }
+           
             User user = new User();
 
             var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
@@ -37,28 +43,30 @@ namespace Spotifly.Controllers
             user.Name = userSpotifyProfile.DisplayName;
             user.Email = userSpotifyProfile.Email;
 
+            ViewData["PieChart"] = GeneratePieChart();
+
             ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
+
+        [Route("Home/Statistics")]
+        public IActionResult Statistics()
+        {
+            return View();
+        }
+
+        [Route("Home/Recommendations")]
+        public IActionResult Recommendations()
+        {
+            return View();
+        }
+
 
         public IActionResult Privacy()
         {
             return View();
         }
 
-        public IActionResult Dashboard()
-        {
-            Chart pieChart = GeneratePieChart();
-
-            ViewData["PieChart"] = pieChart;
-
-            return View();
-        }
-
-        public IActionResult Statistics()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

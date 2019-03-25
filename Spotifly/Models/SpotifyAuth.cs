@@ -20,7 +20,7 @@ namespace Spotifly.Models
         public SpotifyAuth(ISpotifyWebAPI spotifyWebAPI)
         {
             _spotifyWebAPI = spotifyWebAPI;
-
+          
             ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate |
                                                                                              Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead |
                                                                                              Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
