@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Spotifly</title>
     <link rel="icon" href="~/images/spotifylogo.png" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -15,8 +16,10 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
+
     </environment>
     <link rel="stylesheet" href="@Url.Content("~/css/daily-playlist.css")" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/css/responsive.css")" type="text/css" />
     <link href="@Url.Content("~/css/site.css")" rel="stylesheet" type="text/css" />
     @RenderSection("Styles", false)
 </head>
@@ -45,7 +48,7 @@
             <div class="navbar-text">
                 <div class="dropdown show">
                     <span class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <img src="~/images/spotifylogo.png" class="rounded" width="50" alt="user">
+                        <img src="~/images/user_default.jpg" class="rounded-avatar" width="60" height="50" alt="user">
                     </span>
 
                     <div class="dropdown-menu dropdown-menu-right bg-success" aria-labelledby="dropdownMenuLink">

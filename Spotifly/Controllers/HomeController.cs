@@ -35,7 +35,7 @@ namespace Spotifly.Controllers
             {
                 SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
             }
-           
+
             User user = new User();
 
             var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
@@ -63,6 +63,11 @@ namespace Spotifly.Controllers
 
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult About()
         {
             return View();
         }

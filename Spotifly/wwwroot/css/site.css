@@ -36,3 +36,13 @@ section {
 .dropdown-item:hover {
     color: black !important;
 }
+
+
+/*Todo: fix for mobile*/
+.rounded-avatar {
+    border-radius: 50% !important;
+}
+
+.social-icon > i {
+    font-size: 2em;
+}
