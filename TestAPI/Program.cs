@@ -4,6 +4,7 @@ using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TestAPI
 { 
@@ -17,20 +18,21 @@ namespace TestAPI
         static void Main(string[] args)
         {
             // Authentication first
-            ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserTopRead);
+            ImplicitGrantAuth auth = new ImplicitGrantAuth(_clientId, _redirectUri, serverUri, Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate |
+                                                                                             Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead |
+                                                                                             Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
+                                                                                             Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState);
             auth.AuthReceived += async (sender, payload) =>
             {
                 auth.Stop(); // 'sender' is also the auth instance
-                SpotifyWebAPI api = new SpotifyWebAPI(){ TokenType = payload.TokenType, AccessToken = payload.AccessToken };
+                SpotifyWebAPI spotifyWebAPI = new SpotifyWebAPI(){ TokenType = payload.TokenType, AccessToken = payload.AccessToken };
 
                 // Do requests with API client
-                TuneableTrack tar = new TuneableTrack();
-                tar.Popularity = 100;
-                Recommendations rec = api.GetRecommendations(genreSeed: new List<string> { "rock", "rap" }, target: tar, market: "US");
-                rec.Tracks.ForEach(track => {
-                    Console.Write(track.Name + " : ");
-                    track.Artists.ForEach(artist => Console.Write(artist.Name + "\n"));
-                });
+                
+                //Get Users Top Artists
+                List<FullArtist> topArtists = spotifyWebAPI.GetUsersTopArtists(TimeRangeType.ShortTerm,50,0).Items;
+
+                Console.WriteLine (topArtists.First().Images.First().Url);
             };
 
             auth.Start(); // Start an internal HTTP Server
