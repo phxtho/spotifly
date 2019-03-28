@@ -29,6 +29,9 @@ section {
 }
 
 
+.list-group-item {
+    border: 0px solid white !important;
+}
 
 /*.footer {
     position: absolute;
