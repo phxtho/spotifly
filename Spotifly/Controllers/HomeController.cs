@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 //SpotifyAPI-NET
 using Spotifly.Models;
@@ -35,6 +36,7 @@ namespace Spotifly.Controllers
             {
                 SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
             }
+            HttpContext.Session.SetString("Example", "example");
            
             User user = new User();
 
