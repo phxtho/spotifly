@@ -7,7 +7,7 @@ namespace Spotifly
         public static string _ConnectionString;
         public static MySqlConnection NewConnection()
         {
-            return new MySqlConnection(SpotiflyDB._ConnectionString);
+            return new MySqlConnection(_ConnectionString);
         }
     }
 }
