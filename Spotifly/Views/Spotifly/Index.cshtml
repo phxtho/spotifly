@@ -11,12 +11,12 @@
 
 <h1>Review</h1>
 
-<div><canvas id="pieChart"></canvas></div>
+<div><canvas id="genresBarGraph"></canvas></div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
     <script>
-        @Html.Raw(barGraph.CreateChartCode("pieChart"));
+        @Html.Raw(barGraph.CreateChartCode("genresBarGraph"));
     </script>
 }
 

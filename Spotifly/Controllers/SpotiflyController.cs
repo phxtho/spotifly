@@ -32,24 +32,26 @@ namespace Spotifly.Controllers
             return View();
         }
 
-        // POST: Spotifly/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [Route("Spotifly/TrackDetails")]
+        public ActionResult TrackDetails(string id)
         {
             try
             {
-                // TODO: Add insert logic here
+                ViewData["Track"] = spotifyWebAPI.GetTrack(id);
+                ViewData["RecommendedTracks"] = spotifyWebAPI.GetRecommendations(trackSeed: new List<string>() { id }).Tracks;
 
-                return RedirectToAction(nameof(Index));
+                ViewData["RadarPlot"] = GenerateAudioFeaturesChart(spotifyWebAPI.GetAudioFeatures(id));
+
+                return View();
             }
             catch
             {
-                return View();
+                return RedirectToAction();
             }
+           
         }
 
-        #region API Calls
+        #region PrivateMethods
 
         public Dictionary<string, int> UsersTopGenres()
         {
@@ -165,6 +167,33 @@ namespace Spotifly.Controllers
                 }
             };
 
+            return chart;
+        }
+
+        public Chart GenerateAudioFeaturesChart(AudioFeatures features)
+        {
+            Chart chart = new Chart();
+            chart.Type = "radar";
+
+            Data data = new Data();
+            data.Labels = new List<string>() { "Acousticness", "Instrumentalness", "Speechness", "Danceability", "Energy", "Liveness", "Valence" };
+
+            RadarDataset dataset1 = new RadarDataset()
+            {
+                Label = "Track " + features.Id,
+                BackgroundColor = "rgba(179,181,198,0.2)",
+                BorderColor = "rgba(179,181,198,1)",
+                PointBackgroundColor = new List<string>() { "rgba(179,181,198,1)" },
+                PointBorderColor = new List<string>() { "#fff" },
+                PointHoverBackgroundColor = new List<string>() { "#fff" },
+                PointHoverBorderColor = new List<string>() { "rgba(179,181,198,1)" },
+                Data = new List<double>() { features.Acousticness, features.Instrumentalness, features.Speechiness, features.Danceability, features.Energy, features.Liveness, features.Valence }
+            };
+
+            data.Datasets = new List<Dataset>();
+            data.Datasets.Add(dataset1);
+
+            chart.Data = data;
             return chart;
         }
 
