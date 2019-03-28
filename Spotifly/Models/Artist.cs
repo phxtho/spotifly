@@ -13,5 +13,6 @@ namespace Spotifly.Models
         public string SpotifyId { get; set; }
         public string SpotifyHref { get; set; }
         public string Name { get; set; }
+        public string Genre { get; set; }
     }
 }

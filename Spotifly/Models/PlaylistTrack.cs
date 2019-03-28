@@ -9,5 +9,7 @@ namespace Spotifly.Models
 {
     public class PlaylistTrack
     {
+        public int PlaylistId;
+        public int TrackId;
     }
 }
