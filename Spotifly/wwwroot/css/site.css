@@ -7,17 +7,8 @@ html {
     min-height: 100%;
 }
 
-
-.resize-img {
-    max-width: 5%;
-    height: auto;
-}
-
-.spotifly {
-    font: 36 !important;
-    font-style: italic;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
+main {
+    min-height: 100vh;
 }
 
 .navbar-nav a:hover {
@@ -29,12 +20,23 @@ html {
     font-weight: bold !important;
 }
 
-.footer {
+section {
+    margin-top: 2em;
+}
+
+#daily-playlist-list-section > ul > li {
+    margin-bottom: 1.5em;
+}
+
+
+
+/*.footer {
     position: absolute;
     bottom: 0;
     width: 100%;
     white-space: nowrap;
     /* Set the fixed height of the footer here */
-    height: 60px;
-    line-height: 60px; /* Vertically center the text there */
+height: 60px;
+line-height: 60px; /* Vertically center the text there */
 }
+*/

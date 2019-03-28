@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Spotifly</title>
+    <link rel="icon" href="~/images/spotifylogo.png" />
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -15,12 +16,12 @@
               crossorigin="anonymous"
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
-    <link href="@Url.Content("~/Styles/main.css")" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="@Url.Content("~/Styles/daily-playlist.css")" type="text/css" />
+    <link href="@Url.Content("~/Styles/site.css")" rel="stylesheet" type="text/css" />
     @RenderSection("Styles", false)
 </head>
 <body>
-    <header class="header-section">
+    <header class="header-section mb-5">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
             <a class="navbar-brand mr-5" asp-area="" asp-controller="Home" asp-action="Index">
@@ -34,30 +35,16 @@
 
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-                    <a class="nav-item nav-link" href="#">Features</a>
-                    <a class="nav-item nav-link" href="#">Pricing</a>
-                    <a class="nav-item nav-link disabled" href="#">Disabled</a>
+                    <a class="nav-item nav-link active" asp-controller="Home" asp-action="Index">Dashboard <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Statistics">Statistics</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Recommendations">Recommendations</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="About">About</a>
                 </div>
             </div>
 
-            @*<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1" id="nav">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">DASHBOARD</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Statistics">STATISTICS</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Recommendations">RECOMMENDATIONS</a>
-                        </li>
-                    </ul>
-                </div>*@
-
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
             @RenderBody()
@@ -66,7 +53,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - Spotifly - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - Spotifly - <a asp-area="" asp-controller="Home" asp-action="About">Privacy</a>
         </div>
     </footer>
 
