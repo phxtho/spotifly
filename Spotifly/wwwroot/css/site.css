@@ -5,6 +5,7 @@ for details on configuring this project to bundle and minify static web assets. 
 -------------------------------------------------- */
 html {
     min-height: 100%;
+    background: red;
 }
 
 main {
@@ -33,6 +34,9 @@ section {
     border: 0px solid white !important;
 }
 
+.dropdown-menu > dropdown-item:hover {
+    color: black !important;
+}
 /*.footer {
     position: absolute;
     bottom: 0;
