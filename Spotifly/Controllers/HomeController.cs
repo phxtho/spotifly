@@ -80,7 +80,7 @@ namespace Spotifly.Controllers
                 return View("Index");
             }
             Response.Redirect("/Home/Login");
-            return View();
+            return View("Login");
         }
 
         [Route("Home/Register")]
@@ -103,7 +103,7 @@ namespace Spotifly.Controllers
                 return View("Index");
             }
             Response.Redirect("/Home/Registration");
-            return View();
+            return View("Register");
         }
 
 

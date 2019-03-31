@@ -40,7 +40,7 @@ namespace Spotifly.Models
         public static bool IsFriend(Int64 user1Id, Int64 user2Id)
         {
             Friend friend = null;
-            string sql = "SELECT user1_id, user2_id FROM friend WHERE user1_id = @User1Id AND user2_id = @User2Id";
+            string sql = "SELECT user1_id User1Id, user2_id User2Id FROM friend WHERE user1_id = @User1Id AND user2_id = @User2Id";
 
             AdjustIdOrder(ref user1Id, ref user2Id);
             using (MySqlConnection conn = SpotiflyDB.NewConnection())

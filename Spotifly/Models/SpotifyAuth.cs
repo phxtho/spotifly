@@ -82,9 +82,9 @@ namespace Spotifly.Models
 
         private static string HashPassword(string password, DateTime dateTime)
         {
-            string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss.fff");
-            byte[] salt = Encoding.UTF8.GetBytes(dateTimeStr);
-            return Convert.ToString(KeyDerivation.Pbkdf2(password
+            string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss");
+            byte[] salt = Encoding.ASCII.GetBytes(dateTimeStr);
+            return Encoding.ASCII.GetString(KeyDerivation.Pbkdf2(password
                 , salt
                 , KeyDerivationPrf.HMACSHA256
                 , 1000,
