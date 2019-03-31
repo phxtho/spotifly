@@ -1,0 +1,90 @@
+﻿@using ChartJSCore.Models;
+@using SpotifyAPI.Web.Models;
+
+@{
+    ViewData["Title"] = "Stats";
+
+    Chart barGraph = (Chart)ViewData["TopGenre"];
+    List<FullArtist> artists = (List<FullArtist>)ViewData["TopArtists"];
+    List<FullTrack> tracks = (List<FullTrack>)ViewData["TopTracks"];
+}
+
+<h1>Review</h1>
+
+<div><canvas id="genresBarGraph"></canvas></div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script>
+        @Html.Raw(barGraph.CreateChartCode("genresBarGraph"));
+    </script>
+}
+
+<h2>Artists</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                IMG
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                ID
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var artist in artists)
+        {
+            <tr>
+                <td>
+                    <img src="@artist.Images.First().Url" ; width="100" height="100" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelArtist => artist.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelArtist => artist.Id)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Tracks</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                IMG
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                ID
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var track in tracks)
+        {
+            <tr>
+                <td>
+                    <img src="@track.Album.Images.First().Url" ; width="100" height="100" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelTrack => track.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelTrack => track.Id)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+

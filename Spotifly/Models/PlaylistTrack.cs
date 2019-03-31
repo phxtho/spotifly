@@ -9,7 +9,7 @@ namespace Spotifly.Models
 {
     public class PlaylistTrack
     {
-        public string playlist_id { get; set; }
-        public string track_id { get; set; }
+        public int PlaylistId;
+        public int TrackId;
     }
 }
