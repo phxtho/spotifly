@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 
 //SpotifyAPI-NET
 using Spotifly.Models;
@@ -32,12 +32,15 @@ namespace Spotifly.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            if (_spotifyWebAPI.AccessToken == null)
-            {
-                //SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
-                SpotifyAuth.CreateUserToken(1);
-            }
-            HttpContext.Session.SetString("Example", "example");
+            Token token = null;
+            ISpotifyWebAPI api = null;
+
+            api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+            Console.WriteLine("-- Session data --");
+            Console.WriteLine(HttpContext.Session.GetString("Example"));
+            Console.WriteLine(api.GetPrivateProfile().Id);
+            Console.WriteLine("-- Session data --");
+            
            
             User user = new User();
 

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ChartJSCore.Models;
+using ChartJSCore.Models.Bar;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web.Enums;
-using ChartJSCore.Models;
-using ChartJSCore.Models.Bar;
+using SpotifyAPI.Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Spotifly.Controllers
 {

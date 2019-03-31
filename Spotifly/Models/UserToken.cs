@@ -14,6 +14,18 @@ namespace Spotifly.Models
         public string RefreshToken { get; set; }
         public DateTime DateCreated { get; set; }
 
+        public static UserToken SelectToken(Int64 id)
+        {
+            UserToken userToken = null;
+            string sql = "SELECT * FROM user_token WHERE id = @Id";
+
+            using (MySqlConnection conn = SpotiflyDB.NewConnection())
+            {
+                userToken = conn.QuerySingle<UserToken>(sql, new {Id = id});
+            }
+            return userToken;
+        }
+
         public static UserToken InsertToken(Int64 id, string accessToken, string refreshToken, DateTime dateCreated)
         {
             UserToken userToken = null;

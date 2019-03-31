@@ -1,14 +1,19 @@
-﻿using SpotifyAPI.Web;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Enums;
 using SpotifyAPI.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using Dapper;
+using Newtonsoft.Json;
 
 namespace Spotifly.Models
 {
@@ -16,30 +21,67 @@ namespace Spotifly.Models
     {
         //App details specified on my spotify developer dashboard
         private static string _clientId = "45bf0233fca5421aa2e7dacdbb338784";
-
         private static string _secretId = "6f2b0b24a6fb438aa27859d1713baa2d";
         private static string _redirectUri = "http://localhost:4002";
         private static string serverUri = "http://localhost:4002";
-
         private static Scope _scope = Scope.UserReadPrivate | Scope.UserReadEmail | Scope.PlaylistReadPrivate |
                                             Scope.UserLibraryRead | Scope.UserReadPrivate | Scope.UserFollowRead |
                                             Scope.UserReadBirthdate | Scope.UserTopRead | Scope.PlaylistReadCollaborative |
                                             Scope.UserReadRecentlyPlayed | Scope.UserReadPlaybackState | Scope.UserModifyPlaybackState;
 
         private ISpotifyWebAPI _spotifyWebAPI;
-        private static void MaybeRefreshToken(Int64 userId, ref Token token)
-        {
-            if (token.IsExpired())
-            {
-                AuthorizationCodeAuth auth = new AuthorizationCodeAuth(_clientId, _secretId, _redirectUri, serverUri, _scope);
 
-                Task<Token> tokenTask = auth.RefreshToken(token.RefreshToken);
-                tokenTask.Wait();
-                token = tokenTask.Result;
-                UserToken.UpdateToken(userId, token.AccessToken, token.RefreshToken, token.CreateDate);
+        public static bool RegisterUser(string name, string email, string password1, string password2, DateTime dateCreated, ISession sess)
+        {
+            if (password1 == password2)
+            {
+                string hashed = HashPassword(password1, dateCreated);
+                User user = User.InsertUser(name, email, hashed, dateCreated);
+                Token token = null;
+                sess.SetString("userId", user.Id.ToString());
+                sess.SetString("userName", user.Name);
+                token = CreateUserToken(user.Id);
+                UserToken.InsertToken(user.Id, token.AccessToken, token.RefreshToken, token.CreateDate);
+                sess.SetString("token", JsonifyToken(token));
+                return true;
+            }
+            else
+            {
+                Exception cantDoThat = new Exception("Passwords don't match");
+                throw cantDoThat;
             }
         }
 
+        public static bool LogInUser(string email, string password, ISession sess)
+        {
+            User user = User.SelectByEmailForAuth(email);
+            string hashed = HashPassword(password, user.DateCreated);
+            UserToken userToken = null;
+            Token token = null;
+
+            if (hashed == user.Password)
+            {
+                sess.SetString("userId", user.Id.ToString());
+                sess.SetString("userName", user.Name);
+                userToken = UserToken.SelectToken(user.Id);
+                token = RefreshToken(user.Id, userToken.RefreshToken);
+                sess.SetString("token", JsonifyToken(token));
+                return true;
+            }
+            return false;
+        }
+
+        private static string HashPassword(string password, DateTime dateTime)
+        {
+            string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss.fff");
+            byte[] salt = Encoding.UTF8.GetBytes(dateTimeStr);
+            return Convert.ToString(KeyDerivation.Pbkdf2(password
+                , salt
+                , KeyDerivationPrf.HMACSHA256
+                , 1000,
+                128));
+        }
+        
         public static Token CreateUserToken(Int64 userId)
         {
             AuthorizationCodeAuth auth = new AuthorizationCodeAuth(_clientId, _secretId, _redirectUri, serverUri, _scope);
@@ -62,41 +104,55 @@ namespace Spotifly.Models
             return tokenTask.Result;
         }
 
-        public static ISpotifyWebAPI EndpointFromToken(Token token)
+        public static ISpotifyWebAPI FetchUserEndpoint(ISession sess)
+        {
+            Int64 userId = Int64.Parse(sess.GetString("user_id"));
+            Token token = DesjonifyToken(sess.GetString("token"));
+
+            if (MaybeRefreshToken(userId, ref token))
+            {
+                sess.SetString("token", JsonifyToken(token));
+            }
+            return EndpointFromToken(token);
+        }
+
+        private static Token RefreshToken(Int64 userId, string refreshToken)
+        {
+            Token token = null;
+            AuthorizationCodeAuth auth = new AuthorizationCodeAuth(_clientId, _secretId, _redirectUri, serverUri, _scope);
+            Task<Token> tokenTask = auth.RefreshToken(refreshToken);
+            tokenTask.Wait();
+            token = tokenTask.Result;
+            UserToken.UpdateToken(userId, token.AccessToken, token.RefreshToken, token.CreateDate);
+            return token;
+        }
+
+        private static bool MaybeRefreshToken(Int64 userId, ref Token token)
+        {
+            if (token.IsExpired())
+            {
+                token = RefreshToken(userId, token.RefreshToken);
+                return true;
+            }
+            return false;
+        }
+
+        private static ISpotifyWebAPI EndpointFromToken(Token token)
         {
             return new SpotifyWebAPI {
                 AccessToken = token.AccessToken,
                 TokenType = token.TokenType
             };
         }
-        public SpotifyAuth(ISpotifyWebAPI spotifyWebAPI)
+
+        public static string JsonifyToken(Token token)
         {
-            _spotifyWebAPI = spotifyWebAPI;
-          
-            AuthorizationCodeAuth auth = new AuthorizationCodeAuth(_clientId, _secretId, _redirectUri, serverUri, _scope);
-            auth.AuthReceived += async (sender, payload) =>
-            {
-                auth.Stop();
-                Token token = await auth.ExchangeCode(payload.Code);
-                Token refresh = await auth.RefreshToken(payload.Code);
-                SpotifyWebAPI api = new SpotifyWebAPI() {TokenType = token.TokenType, AccessToken = token.AccessToken};
-                Console.WriteLine("-- AccessToken --");
-                Console.WriteLine(api.AccessToken);
-                Console.WriteLine(token.RefreshToken);
-                Console.WriteLine("Expires In: " + token.ExpiresIn.ToString());
-                Console.WriteLine("-- AccessToken --");
-                // Do requests with API client
-            };
-            auth.Start();
-            auth.OpenBrowser();
+            return JsonConvert.SerializeObject(token);
         }
 
-        private void AuthOnAuthReceived(object sender, AuthorizationCode payload)
+        public static Token DesjonifyToken(string token)
         {
-            ImplicitGrantAuth auth = (ImplicitGrantAuth)sender;
-
-            _spotifyWebAPI.AccessToken = payload.Code;
-            
+            return JsonConvert.DeserializeObject<Token>(token);
         }
     }
 }
