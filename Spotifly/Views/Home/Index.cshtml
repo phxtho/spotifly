@@ -1,9 +1,11 @@
-﻿@{
+﻿@model User
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
 
-<h1>Dashboard <small>@User.Identity.Name</small></h1>
+<h1>Dashboard <small>@Model.Name</small></h1>
 
 <section>
     <span class="text-red">

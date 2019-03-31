@@ -24,6 +24,9 @@ namespace Spotifly.Controllers
     public class HomeController : Controller
     {
         private ISpotifyWebAPI _spotifyWebAPI;
+        private string _accessToken;
+
+
 
 
         public HomeController(ISpotifyWebAPI spotifyWebAPI)
@@ -35,10 +38,29 @@ namespace Spotifly.Controllers
 
         public IActionResult Index()
         {
-            if (_spotifyWebAPI.AccessToken == null)
+            //if (_spotifyWebAPI.AccessToken == null)
+            //{
+            //    SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
+            //}
+
+
+            using (var storage = new LocalStorage())
             {
-                SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
+                try
+                {
+                    _accessToken = storage.Get<ExternalToken>("token").AccessToken;
+                    ViewData["token"] = _accessToken;
+                }
+                catch
+                {
+                    ViewData["token"] = "Error: Please logout and login with Spotify.";
+                    Redirect("/Identity/Account/Login");
+                }
+
             }
+            _spotifyWebAPI.AccessToken = _accessToken != null ? _accessToken : null;
+            // Todo: Refactor this!
+            _spotifyWebAPI.TokenType = "Bearer";
 
             User user = new User();
 
@@ -52,24 +74,7 @@ namespace Spotifly.Controllers
             ViewData["Users"] = Models.User.SelectAll();
 
 
-            using (var storage = new LocalStorage())
-            {
-                try
-                {
-                    string access = storage.Get<ExternalToken>("token").AccessToken;
-                    ViewData["token"] = access;
-                }
-                catch
-                {
-                    ViewData["token"] = "Error: Please logout and login with Spotify.";
-                    //throw;
-                }
-
-            }
-
-
-
-            return View();
+            return View(user);
         }
 
         public IActionResult About() => View();

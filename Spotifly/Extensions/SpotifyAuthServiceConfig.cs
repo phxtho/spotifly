@@ -15,7 +15,7 @@ namespace Spotifly.Extensions
            .AddSpotify(options =>
            {
                options.ClientId = "8fed9a69a36f416e9d1069c3a74f23f3";
-               options.ClientSecret = "3a30b3bcac2c4ba6b42630057189a38a";
+               options.ClientSecret = "10d488eca54e4992b2eeeb9f6403b090";
                options.SaveTokens = true;
                options.CallbackPath = "/callback";
                options.Events.OnRemoteFailure = (context) =>
@@ -27,8 +27,6 @@ namespace Spotifly.Extensions
 
                options.Events.OnCreatingTicket = (ctx) =>
                {
-
-                   Console.WriteLine($"{ctx}");
                    using (var storage = new LocalStorage())
                    {
                        // persist tokens used for api requests
