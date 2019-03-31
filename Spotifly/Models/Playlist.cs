@@ -9,6 +9,11 @@ namespace Spotifly.Models
 {
     public class Playlist
     {
-        
+        public string Id { get; set; }
+        public Int64 OwnerId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string SpotifyHref { get; set; }
+        public bool Public { get; set; }
     }
 }

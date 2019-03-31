@@ -34,7 +34,8 @@ namespace Spotifly.Controllers
         {
             if (_spotifyWebAPI.AccessToken == null)
             {
-                SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
+                //SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
+                SpotifyAuth.CreateUserToken(1);
             }
             HttpContext.Session.SetString("Example", "example");
            
