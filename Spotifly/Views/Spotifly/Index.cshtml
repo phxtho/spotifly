@@ -74,7 +74,9 @@
         {
             <tr>
                 <td>
-                    <img src="@track.Album.Images.First().Url" ; width="100" height="100" />
+                    <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@track.Id>
+                        <img src="@track.Album.Images.First().Url" ; width="100" height="100" />
+                    </a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelTrack => track.Name)

@@ -1,5 +1,6 @@
 ﻿@using ChartJSCore.Models;
 @using SpotifyAPI.Web.Models;
+@using SpotifyAPI.Web;
 
 @{
     ViewData["Title"] = "TrackDetails";
@@ -8,14 +9,16 @@
     List<SimpleTrack> recommendedTracks = (List<SimpleTrack>)ViewData["RecommendedTracks"];
 
     Chart radarPlot = (Chart)ViewData["RadarPlot"];
+    FullTrack trackDetails;
 }
 
 <h1>TrackDetails</h1>
 
 <body>
-    <img src="@track.Album.Images.First().Url">
+    <img src="@track.Album.Images.First().Url" ; width="500" height="500" style="vertical-align:bottom">
     <p>
         @track.Name
+
     </p>
     <h3>Audio Features</h3>
 
@@ -50,10 +53,16 @@
 
                 <tr>
                     <td>
-                        <!--<img  ; width="100" height="100" />-->
+                        @{
+                            ISpotifyWebAPI spotifyWebAPI =(ISpotifyWebAPI) ViewData["SpotifyWebAPI"];
+                             trackDetails = spotifyWebAPI.GetTrack(recTrack.Id);
+                        }
+                        <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@recTrack.Id>
+                            <img src="@trackDetails.Album.Images.First().Url" ; width="100" height="100" />
+                        </a>
                     </td>
                     <td>
-                        
+
                         @Html.DisplayFor(modelTrack => trackName)
                     </td>
                     <td>

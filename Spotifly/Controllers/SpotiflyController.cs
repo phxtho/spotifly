@@ -26,8 +26,8 @@ namespace Spotifly.Controllers
         public ActionResult Index()
         {
             ViewData["TopGenre"] = GenerateUserGenreChart(UsersTopGenres());
-            ViewData["TopArtists"] = spotifyWebAPI.GetUsersTopArtists().Items.GetRange(0,5);
-            ViewData["TopTracks"] = spotifyWebAPI.GetUsersTopTracks().Items.GetRange(0, 10);
+            ViewData["TopArtists"] = spotifyWebAPI.GetUsersTopArtists().Items.GetRange(0, spotifyWebAPI.GetUsersTopArtists().Items.Count);
+            ViewData["TopTracks"] = spotifyWebAPI.GetUsersTopTracks().Items.GetRange(0, spotifyWebAPI.GetUsersTopArtists().Items.Count);
 
             return View();
         }
@@ -39,7 +39,7 @@ namespace Spotifly.Controllers
             {
                 ViewData["Track"] = spotifyWebAPI.GetTrack(id);
                 ViewData["RecommendedTracks"] = spotifyWebAPI.GetRecommendations(trackSeed: new List<string>() { id }).Tracks;
-
+                ViewData["SpotifyWebAPI"] = this.spotifyWebAPI;
                 ViewData["RadarPlot"] = GenerateAudioFeaturesChart(spotifyWebAPI.GetAudioFeatures(id));
 
                 return View();
@@ -87,12 +87,12 @@ namespace Spotifly.Controllers
             chart.Type = "bar";
 
             Data data = new Data();
-            data.Labels = genres.Keys.ToList().GetRange(0,10);
+            data.Labels = genres.Keys.ToList().GetRange(0, genres.Keys.ToList().Count);
 
             BarDataset dataset = new BarDataset()
             {
                 Label = "# of occurances",
-                Data = genres.Values.Select(i => (double)i).ToList().GetRange(0,10),
+                Data = genres.Values.Select(i => (double)i).ToList().GetRange(0, genres.Keys.ToList().Count),
                 BackgroundColor = new List<string>()
                 {
                 "rgba(255, 99, 132, 0.2)",
