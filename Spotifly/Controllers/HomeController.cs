@@ -23,8 +23,6 @@ namespace Spotifly.Controllers
     public class HomeController : Controller
     {
         private ISpotifyWebAPI _spotifyWebAPI;
-        const string SessionName = "_Name";
-        const string SessionAge = "_Age";
 
 
         public HomeController(ISpotifyWebAPI spotifyWebAPI)
@@ -33,10 +31,8 @@ namespace Spotifly.Controllers
 
         }
 
-        [Route("Home/Index")]
-        [Route("Home/")]
-        [Route("")]
-        public async Task<IActionResult> Index()
+
+        public IActionResult Index()
         {
             if (_spotifyWebAPI.AccessToken == null)
             {
@@ -56,6 +52,9 @@ namespace Spotifly.Controllers
 
             return View();
         }
+
+        public IActionResult About() => View();
+
 
         [Route("Home/Statistics")]
         public IActionResult Statistics()

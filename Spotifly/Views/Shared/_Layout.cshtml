@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Spotifly</title>
+    <link rel="icon" href="~/images/spotifylogo.png" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <environment include="Development">
@@ -33,13 +34,17 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1" id="nav">
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">DASHBOARD</a>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-area="" asp-controller="Spotifly" asp-action="Index">STATISTICS</a>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Spotifly" asp-action="Index">Statistics</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Recommendations">RECOMMENDATIONS</a>
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Recommendations">Recommendations</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">About</a>
                     </li>
                 </ul>
             </div>
