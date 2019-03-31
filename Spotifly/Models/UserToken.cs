@@ -17,11 +17,11 @@ namespace Spotifly.Models
         public static UserToken SelectToken(Int64 id)
         {
             UserToken userToken = null;
-            string sql = "SELECT * FROM user_token WHERE id = @Id";
+            string sql = "SELECT id, access_token AccessToken, refresh_token RefreshToken, date_created DateCreated FROM user_token WHERE id = @Id";
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
             {
-                userToken = conn.QuerySingle<UserToken>(sql, new {Id = id});
+                userToken = conn.QueryFirst<UserToken>(sql, new {Id = id});
             }
             return userToken;
         }
@@ -30,7 +30,7 @@ namespace Spotifly.Models
         {
             UserToken userToken = null;
             string insert = "INSERT INTO user_token (id, access_token, refresh_token, date_created) VALUES (@Id, @AccessToken, @RefreshToken, @DateCreated)";
-            string select = "SELECT id, acccess_token, refresh_token, date_created FROM user_token WHERE id = Id";
+            string select = "SELECT id, access_token AccessToken, refresh_token RefreshToken, date_created DateCreated FROM user_token WHERE id = @Id";
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
             {
@@ -45,7 +45,7 @@ namespace Spotifly.Models
         {
             UserToken userToken = null;
             string update = "UPDATE user_token (access_token, refresh_token, date_created) VALUES (@AccessToken, @RefreshToken, @DateCreated) WHERE id = @Id";
-            string select = "SELECT id, acccess_token, refresh_token, date_created FROM user_token WHERE id = Id";
+            string select = "SELECT id, access_token AccessToken, refresh_token RefreshToken, date_created DateCreated FROM user_token WHERE id = @Id";
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
             {

@@ -32,25 +32,19 @@ namespace Spotifly.Controllers
         [Route("")]
         public IActionResult Index()
         {
-            Token token = null;
-            ISpotifyWebAPI api = null;
+            if (HttpContext.Session.GetString("userId") == null)
+            {
+                Response.Redirect("/Home/Login");
+                return View("Login");
+            }
+            ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+            var userSpotifyProfile = api.GetPrivateProfile();
 
-            api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
-            Console.WriteLine("-- Session data --");
-            Console.WriteLine(HttpContext.Session.GetString("Example"));
-            Console.WriteLine(api.GetPrivateProfile().Id);
-            Console.WriteLine("-- Session data --");
-            
-           
             User user = new User();
-
-            var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
-
             user.Name = userSpotifyProfile.DisplayName;
             user.Email = userSpotifyProfile.Email;
 
             ViewData["PieChart"] = GeneratePieChart();
-
             ViewData["Users"] = Models.User.SelectAll();
             return View();
         }
@@ -64,6 +58,51 @@ namespace Spotifly.Controllers
         [Route("Home/Recommendations")]
         public IActionResult Recommendations()
         {
+            return View();
+        }
+
+        [Route("Home/Login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Home/Login")]
+        public IActionResult PostLogin()
+        {
+            IFormCollection form = HttpContext.Request.Form;
+
+            if (SpotifyAuth.LogInUser(form["email"], form["password"], HttpContext.Session))
+            {
+                Response.Redirect("/Home");
+                Index();
+                return View("Index");
+            }
+            Response.Redirect("/Home/Login");
+            return View();
+        }
+
+        [Route("Home/Register")]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Home/Register")]
+        public IActionResult PostRegistration()
+        {
+            IFormCollection form = Request.Form;
+
+            Console.WriteLine($"{form["name"]}, {form["email"]}, {form["password1"]}, {form["password2"]}");
+            if (SpotifyAuth.RegisterUser(form["name"], form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
+            {
+                Response.Redirect("/Home");
+                Index();
+                return View("Index");
+            }
+            Response.Redirect("/Home/Registration");
             return View();
         }
 

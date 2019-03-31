@@ -63,8 +63,17 @@ namespace Spotifly.Models
             {
                 sess.SetString("userId", user.Id.ToString());
                 sess.SetString("userName", user.Name);
+                Console.WriteLine(user.Id.ToString());
                 userToken = UserToken.SelectToken(user.Id);
-                token = RefreshToken(user.Id, userToken.RefreshToken);
+                Console.WriteLine(userToken.DateCreated.ToString());
+                Console.WriteLine("LOGIN");
+                token = new Token {
+                    AccessToken = userToken.AccessToken,
+                    RefreshToken = userToken.RefreshToken,
+                    ExpiresIn = 3600,
+                    CreateDate = userToken.DateCreated
+                };
+                MaybeRefreshToken(user.Id, ref token);
                 sess.SetString("token", JsonifyToken(token));
                 return true;
             }
@@ -106,7 +115,7 @@ namespace Spotifly.Models
 
         public static ISpotifyWebAPI FetchUserEndpoint(ISession sess)
         {
-            Int64 userId = Int64.Parse(sess.GetString("user_id"));
+            Int64 userId = Int64.Parse(sess.GetString("userId"));
             Token token = DesjonifyToken(sess.GetString("token"));
 
             if (MaybeRefreshToken(userId, ref token))
@@ -129,6 +138,8 @@ namespace Spotifly.Models
 
         private static bool MaybeRefreshToken(Int64 userId, ref Token token)
         {
+            Console.WriteLine("MaybeRefresh");
+            Console.WriteLine($"{token.CreateDate.ToString()}");
             if (token.IsExpired())
             {
                 token = RefreshToken(userId, token.RefreshToken);
@@ -141,7 +152,7 @@ namespace Spotifly.Models
         {
             return new SpotifyWebAPI {
                 AccessToken = token.AccessToken,
-                TokenType = token.TokenType
+                TokenType = "Bearer"
             };
         }
 
