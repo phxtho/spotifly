@@ -5,6 +5,12 @@
 
 <h1>Dashboard <small>@User.Identity.Name</small></h1>
 
+<section>
+    <span class="text-red">
+        @ViewData["token"]
+    </span>
+</section>
+
 <div><canvas id="pieChart"></canvas></div>
 
 @{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; }

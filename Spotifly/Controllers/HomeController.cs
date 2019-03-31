@@ -16,6 +16,7 @@ using SpotifyAPI.Web.Enums;
 //ChartJs
 using ChartJSCore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Hanssens.Net;
 
 namespace Spotifly.Controllers
 {
@@ -49,6 +50,24 @@ namespace Spotifly.Controllers
             ViewData["PieChart"] = GeneratePieChart();
 
             ViewData["Users"] = Models.User.SelectAll();
+
+
+            using (var storage = new LocalStorage())
+            {
+                try
+                {
+                    string access = storage.Get<ExternalToken>("token").AccessToken;
+                    ViewData["token"] = access;
+                }
+                catch
+                {
+                    ViewData["token"] = "Error: Please logout and login with Spotify.";
+                    //throw;
+                }
+
+            }
+
+
 
             return View();
         }

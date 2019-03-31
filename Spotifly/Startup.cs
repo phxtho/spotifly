@@ -14,6 +14,7 @@ using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web.Enums;
+using Spotifly.Extensions;
 
 namespace Spotifly
 {
@@ -53,6 +54,9 @@ namespace Spotifly
 
 
             services.AddSingleton<ISpotifyWebAPI, SpotifyWebAPI>();
+
+            // Spotify authentication
+            services.AddSpotifyAuthConfig();
 
         }
 
