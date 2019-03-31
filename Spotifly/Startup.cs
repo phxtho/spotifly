@@ -53,6 +53,7 @@ namespace Spotifly
 
 
             services.AddSingleton<ISpotifyWebAPI, SpotifyWebAPI>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,7 +74,7 @@ namespace Spotifly
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

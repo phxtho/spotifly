@@ -2,15 +2,16 @@
     ViewData["Title"] = "Dashboard";
 }
 
-    <h1>Dashboard</h1>
 
-    <div><canvas id="pieChart"></canvas></div>
+<h1>Dashboard <small>@User.Identity.Name</small></h1>
 
-    @{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; }
+<div><canvas id="pieChart"></canvas></div>
 
-    @section Scripts {
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-        <script>
+@{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; }
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
+    <script>
         @Html.Raw(pieChart.CreateChartCode("pieChart"));
-        </script>
-    }
+    </script>
+}

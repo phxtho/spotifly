@@ -15,29 +15,34 @@ using SpotifyAPI.Web.Enums;
 
 //ChartJs
 using ChartJSCore.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Spotifly.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private ISpotifyWebAPI _spotifyWebAPI;
+        const string SessionName = "_Name";
+        const string SessionAge = "_Age";
+
 
         public HomeController(ISpotifyWebAPI spotifyWebAPI)
         {
             _spotifyWebAPI = spotifyWebAPI;
+
         }
 
         [Route("Home/Index")]
         [Route("Home/")]
         [Route("")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (_spotifyWebAPI.AccessToken == null)
             {
                 SpotifyAuth authenticate = new SpotifyAuth(_spotifyWebAPI);
             }
-            HttpContext.Session.SetString("Example", "example");
-           
+
             User user = new User();
 
             var userSpotifyProfile = _spotifyWebAPI.GetPrivateProfile();
@@ -48,6 +53,7 @@ namespace Spotifly.Controllers
             ViewData["PieChart"] = GeneratePieChart();
 
             ViewData["Users"] = Models.User.SelectAll();
+
             return View();
         }
 

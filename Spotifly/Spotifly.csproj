@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -13,6 +13,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
     <PackageReference Include="MySql.Data" Version="8.0.15" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore.Design" Version="8.0.15" />
     <PackageReference Include="MySql.Web" Version="8.0.15" />
     <PackageReference Include="SpotifyAPI.Web" Version="3.1.2" />
     <PackageReference Include="SpotifyAPI.Web.Auth" Version="3.1.2" />
