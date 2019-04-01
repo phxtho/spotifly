@@ -16,6 +16,7 @@ namespace Spotifly.Models
             chart.Type = "bar";
 
             Data data = new Data();
+
             int upperLimit = genres.Count > 5 ? 5 : genres.Count;
             data.Labels = genres.Keys.ToList().GetRange(0, upperLimit);
 
