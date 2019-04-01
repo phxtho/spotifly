@@ -65,7 +65,7 @@ namespace Spotifly.Controllers
 
         #region PrivateMethods
 
-        private Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
+        public Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
         {
             //Get Users Top Artists
             List<FullArtist> topArtists = api.GetUsersTopArtists().Items;
