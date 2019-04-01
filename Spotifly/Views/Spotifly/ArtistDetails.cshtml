@@ -3,16 +3,17 @@
 @using SpotifyAPI.Web;
 
 @{
+
     ViewData["Title"] = "ArtistDetails";
 
     FullArtist artist = (FullArtist)ViewData["Artist"];
-    List<SimpleTrack> recommendedTracks = (List<SimpleTrack>)ViewData["RecommendedArtist"];
+    SeveralArtists recommendedArtist = (SeveralArtists) ViewData["RecommendedArtist"];
 
-    Chart radarPlot = (Chart)ViewData["RadarPlot"];
+    //Chart radarPlot = (Chart)ViewData["RadarPlot"];
     FullTrack trackDetails;
 }
 
-<h1>TrackDetails</h1>
+<h1>Artist Details</h1>
 
 <body>
     <div class="container">
@@ -21,21 +22,10 @@
                 <h2 class="mt-0 mb-1"> @artist.Name</h2>
                 <img class="ml-3" src="@artist.Images.First().Url" alt="@artist.Name" ; width="500" height="500" style="vertical-align:bottom">
             </div>
-            <div class="col">
-                <h2 class="mt-0 mb-1">Audio Features</h2>
-                <div><canvas id="radarPlot" style="display: block; height: 500px; width: 525px;"></canvas></div>
-            </div>
         </div>
     </div>
 
-    @section Scripts {
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-        <script>
-        @Html.Raw(radarPlot.CreateChartCode("radarPlot"));
-        </script>
-    }
-
-    <h3>Recommended Tracks</h3>
+    <h3>Related Artist</h3>
     <table class="table">
         <thead>
             <tr>
@@ -45,38 +35,29 @@
                 <th>
                     Name
                 </th>
-                <th>
-                    Artist
-                </th>
+                
             </tr>
         </thead>
         <tbody>
-            @foreach (var recTrack in recommendedTracks)
+            @foreach (var recArtist in recommendedArtist.Artists)
             {
-                var trackName = recTrack.Name;
-                var artistName = recTrack.Artists.First().Name;
+                var artistName = recArtist.Name;
+               
 
-            <tr>
-                <td>
-                    @{
-                            ISpotifyWebAPI spotifyWebAPI = (ISpotifyWebAPI)ViewData["SpotifyWebAPI"];
-                            trackDetails = spotifyWebAPI.GetTrack(recTrack.Id);
-                    }
+                <tr>
+                    <td>
+                        <img src="@recArtist.Images.First().Url" ; width="100" height="100"  />
+                    </td>
+                    <td>
+                        <div class="nav-item">
+                            <a asp-area="" asp-controller="Spotifly" asp-action="ArtistDetails" asp-route-id=@recArtist.Id>
+                                @Html.DisplayFor(modelTrack => artistName)
+                            </a>
+                        </div>
+                    </td>
+                    
 
-                    <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@recTrack.Id>
-                        <img src="@trackDetails.Album.Images.First().Url" ; width="100" height="100" class="image" />
-                    </a>
-
-                </td>
-                <td>
-
-                    @Html.DisplayFor(modelTrack => trackName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelTrack => artistName)
-                </td>
-
-            </tr>
+                </tr>
             }
         </tbody>
     </table>

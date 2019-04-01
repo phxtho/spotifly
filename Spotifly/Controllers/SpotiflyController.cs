@@ -65,9 +65,9 @@ namespace Spotifly.Controllers
             {
                 ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
                 ViewData["Artist"] = api.GetArtist(id);
-                ViewData["RecommendedArtist"] = api.GetRecommendations(artistSeed: new List<string>() { id }).Tracks;//or artist, possible break point
+                ViewData["RecommendedArtist"] = api.GetRelatedArtists(id);//or artist, possible break point
                 ViewData["SpotifyWebAPI"] = api;
-                ViewData["RadarPlot"] = ChartGen.GenerateAudioFeaturesChart(api.GetAudioFeatures(id));
+               // ViewData["RadarPlot"] = ChartGen.GenerateAudioFeaturesChart(api.GetAudioFeatures(id));
 
                 return View();
             }
