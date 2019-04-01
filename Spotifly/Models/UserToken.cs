@@ -55,5 +55,15 @@ namespace Spotifly.Models
             }
             return userToken;
         }
+
+        public static void DeleteToken(Int64 id)
+        {
+            string sql = "DELETE FROM user_token WHERE id = @Id";
+
+            using (MySqlConnection conn = SpotiflyDB.NewConnection())
+            {
+                var affectedRows = conn.Execute(sql, new { Id = id });
+            }
+        }
     }
 }

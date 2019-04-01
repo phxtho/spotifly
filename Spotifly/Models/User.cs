@@ -70,11 +70,24 @@ namespace Spotifly.Models
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
             {
-                var affectedRows = conn.Execute(insert, new { Name = name, Email = email, Password = password, DateCreated = dateCreated });
+                var affectedRows = conn.Execute(insert, new {Name = name, Email = email, Password = password, DateCreated = dateCreated });
                 if (1 == affectedRows)
                     user = conn.QueryFirst<User>(select, new { Email = email });
             }
             return user;
+        }
+
+        public static bool UpdateUserName(Int64 id, string name)
+        {
+            string sql = "UPDATE user SET name=@Name where id=@Id";
+            bool success = false;
+
+            using (MySqlConnection conn = SpotiflyDB.NewConnection())
+            {
+                var affectedRows = conn.Execute(sql, new {Id = id, Name = name});
+                success = (affectedRows == 1);
+            }
+            return success;
         }
 
         public static bool UpdatePassword(Int64 id, string password)
@@ -124,6 +137,16 @@ namespace Spotifly.Models
                 success = (affectedRows == 1);
             }
             return success;
+        }
+
+        public static void DeleteUser(Int64 id)
+        {
+            string sql = "DELETE FROM user WHERE id = @Id";
+
+            using (MySqlConnection conn = SpotiflyDB.NewConnection())
+            {
+                var affectedRows = conn.Execute(sql, new { Id = id });
+            }
         }
     }
 }

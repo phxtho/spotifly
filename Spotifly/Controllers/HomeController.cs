@@ -88,7 +88,10 @@ namespace Spotifly.Controllers
                 {
                     ViewData["ErrorMessage"] = "Incorrect password.";
                 }
-            } catch(Exception e)
+            }
+            #pragma warning disable 0168
+            catch (Exception e)
+            #pragma warning restore 0168
             {
                 ViewData["ErrorMessage"] = "Email not found.";
             }
@@ -107,10 +110,9 @@ namespace Spotifly.Controllers
         {
             IFormCollection form = Request.Form;
 
-            Console.WriteLine($"{form["name"]}, {form["email"]}, {form["password1"]}, {form["password2"]}");
             try
             {
-                if (SpotifyAuth.RegisterUser(form["name"], form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
+                if (SpotifyAuth.RegisterUser(form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
                 {
                     Response.Redirect("/Home");
                     Index();
@@ -121,11 +123,20 @@ namespace Spotifly.Controllers
                     ViewData["ErrorMessage"] = "Passwords don't match";
                 }
             }
+            #pragma warning disable 0168
             catch (Exception e)
+            #pragma warning restore 0168
             {
                 ViewData["ErrorMessage"] = "Something went wrong while registering your account :( Maybe you already have one.";
             }
             return View("Register");
+        }
+
+        [Route("Home/Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return View("Login");
         }
 
 

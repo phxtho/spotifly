@@ -31,19 +31,35 @@ namespace Spotifly.Models
 
         private ISpotifyWebAPI _spotifyWebAPI;
 
-        public static bool RegisterUser(string name, string email, string password1, string password2, DateTime dateCreated, ISession sess)
+        public static bool RegisterUser(string email, string password1, string password2, DateTime dateCreated, ISession sess)
         {
+            User user = null;
+            try
+            {
+                user = User.SelectByEmailForAuth(email);
+            }
+            #pragma warning disable 0168
+            catch (Exception e) { }
+            #pragma warning restore 0168
+            if (user != null)
+                throw new Exception("User already exists");
             if (password1 == password2)
             {
-                string hashed = HashPassword(password1, dateCreated);
-                User user = User.InsertUser(name, email, hashed, dateCreated);
-                Token token = null;
-                sess.SetString("userId", user.Id.ToString());
-                sess.SetString("userName", user.Name);
-                token = CreateUserToken(user.Id);
-                UserToken.InsertToken(user.Id, token.AccessToken, token.RefreshToken, token.CreateDate);
-                sess.SetString("token", JsonifyToken(token));
-                return true;
+                Token token = GenerateUserToken();
+                if (token != null)
+                {
+                    ISpotifyWebAPI api = EndpointFromToken(token);
+                    string name = api.GetPrivateProfile().DisplayName;
+                    string hashed = HashPassword(password1, dateCreated);
+                    user = User.InsertUser(name, email, hashed, dateCreated);
+                    UserToken.InsertToken(user.Id, token.AccessToken, token.RefreshToken, token.CreateDate);
+                    sess.SetString("userId", user.Id.ToString());
+                    sess.SetString("userName", user.Name);
+                    sess.SetString("token", JsonifyToken(token));
+                    return true;
+                }
+                else
+                    throw new Exception("Failed to perform token exchange");
             }
             return false;
         }
@@ -85,8 +101,10 @@ namespace Spotifly.Models
             return Convert.ToBase64String(hash);
         }
         
-        public static Token CreateUserToken(Int64 userId)
+        public static Token GenerateUserToken()
         {
+            const int MaxTries = 600; // 2 Mins
+            int TryCount = 0;
             AuthorizationCodeAuth auth = new AuthorizationCodeAuth(_clientId, _secretId, _redirectUri, serverUri, _scope);
             Task<Token> tokenTask = null;
             auth.AuthReceived += (sender, payload) =>
@@ -98,11 +116,12 @@ namespace Spotifly.Models
             auth.OpenBrowser();
             Console.WriteLine($"{DateTime.Now.ToString()} - Waiting");
             // Plz don't judge me for this awful hack
-            while (tokenTask == null)
+            while (tokenTask == null && TryCount < MaxTries)
             {
                 Thread.Sleep(200);
+                ++TryCount;
             }
-            tokenTask.Wait();
+            tokenTask.Wait(120000);
             Console.WriteLine($"{DateTime.Now.ToString()} - Done");
             return tokenTask.Result;
         }

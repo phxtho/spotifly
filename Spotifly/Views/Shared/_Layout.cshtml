@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -6,6 +8,9 @@
     <title>@ViewData["Title"] - Spotifly</title>
     <link rel="icon" href="~/images/spotifylogo.png" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -49,30 +54,23 @@
                 </ul>
             </div>
 
-            @if (User.Identity.IsAuthenticated)
-            {
+            @if (Context.Session.GetString("userId") != null) {
                 <div class="navbar-text">
                     <section class="row">
-                        <small class="mr-4">@User.Identity.Name</small>
+                        <small class="mr-4">@Context.Session.GetString("userName")</small>
                         <div class="dropdown show pr-4">
                             <span class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="far fa-user"></i>
-
                             </span>
-
                             <div class="dropdown-menu dropdown-menu-right bg-success" aria-labelledby="dropdownMenuLink">
-                                <a class="dropdown-item profile-dropdown-item" href="/Identity/Account/Manage">Profile</a>
-
+                                <a class="dropdown-item profile-dropdown-item" href="/Identity/Account/Manage">Account</a>
                                 <div class="dropdown-divider"></div>
-                                <form asp-area="Identity" asp-page="/Account/Logout" class="mx-2 form-horizontal">
-                                    <button type="submit" class="btn w-100 mx-auto">Logout</button>
-                                </form>
+                                <a class="dropdown-item" href="/Home/Logout">Logout</a>
                             </div>
                         </div>
                     </section>
                 </div>
             }
-
         </nav>
     </header>
     <div class="container">
