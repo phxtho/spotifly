@@ -16,7 +16,7 @@ namespace Spotifly.Models
             chart.Type = "bar";
 
             Data data = new Data();
-            data.Labels = genres.Keys.ToList().GetRange(0, 5);
+            data.Labels = genres.Keys.ToList().GetRange(0, genres.Keys.ToList().Count);
 
             BarDataset dataset = new BarDataset()
             {

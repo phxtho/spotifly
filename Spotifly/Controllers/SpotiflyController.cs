@@ -23,8 +23,8 @@ namespace Spotifly.Controllers
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             ViewData["TopGenre"] = ChartGen.GenerateUserGenreChart(UsersTopGenres(api));
-            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, 5);
-            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, 5);
+            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
+            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
 
             return View();
         }
