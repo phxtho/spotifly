@@ -24,6 +24,7 @@ namespace Spotifly.Controllers
         public ActionResult Statistics()
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+
             ViewData["TopGenre"] = ChartGen.GenerateUserGenreChart(UsersTopGenres(api));
             ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
             ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
@@ -91,7 +92,7 @@ namespace Spotifly.Controllers
             int trackCount = (topTracks.Count > 5) ? 5 : topTracks.Count;
             List<FullTrack> myTracks = topTracks.GetRange(0, trackCount);
 
-            List<SimpleTrack> vTracks = new List<SimpleTrack>();
+            var vTracks = new List<SimpleTrack>();
             List<string> id = new List<string>();
 
             foreach (var track in myRecent)
@@ -103,7 +104,6 @@ namespace Spotifly.Controllers
                 id.Add(track.Id);
             }
             vTracks = api.GetRecommendations(trackSeed: id).Tracks;
-
             return View(vTracks);
         }
         #region PrivateMethods
