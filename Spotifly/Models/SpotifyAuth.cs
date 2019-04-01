@@ -45,11 +45,7 @@ namespace Spotifly.Models
                 sess.SetString("token", JsonifyToken(token));
                 return true;
             }
-            else
-            {
-                Exception cantDoThat = new Exception("Passwords don't match");
-                throw cantDoThat;
-            }
+            return false;
         }
 
         public static bool LogInUser(string email, string password, ISession sess)
