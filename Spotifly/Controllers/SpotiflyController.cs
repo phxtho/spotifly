@@ -1,7 +1,6 @@
 ﻿using ChartJSCore.Models;
 using ChartJSCore.Models.Bar;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Enums;

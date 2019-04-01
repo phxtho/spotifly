@@ -15,11 +15,9 @@ using SpotifyAPI.Web.Enums;
 
 //ChartJs
 using ChartJSCore.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Spotifly.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private ISpotifyWebAPI _spotifyWebAPI;
