@@ -1,5 +1,5 @@
 CREATE TABLE playlist (
-id BIGINT NOT NULL AUTO_INCREMENT,
+id VARCHAR(32) NOT NULL,
 owner_id BIGINT NOT NULL,
 name VARCHAR(128) NOT NULL,
 description VARCHAR(768),
@@ -10,8 +10,8 @@ CONSTRAINT FOREIGN KEY(owner_id) REFERENCES `user`(id)
 );
 
 CREATE TABLE playlist_track (
-playlist_id BIGINT NOT NULL,
-track_id BIGINT NOT NULL,
+playlist_id VARCHAR(32) NOT NULL,
+track_id VARCHAR(32) NOT NULL,
 CONSTRAINT PRIMARY KEY(playlist_id, track_id),
 CONSTRAINT FOREIGN KEY(playlist_id) REFERENCES playlist(id),
 CONSTRAINT FOREIGN KEY(track_id) REFERENCES track(id)

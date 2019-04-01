@@ -10,7 +10,7 @@ namespace Spotifly.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
@@ -27,10 +27,10 @@ namespace Spotifly.Models
             }
             return users;
         }
-
+        
         public static List<User> SelectFriends(string id)
         {
-            string sql = "SELECT id, name, date_created FROM user WHERE user1_id == @UserId OR user2_id == @UserId";
+            string sql = "SELECT id, name, date_created DateCreated FROM user WHERE user1_id == @UserId OR user2_id == @UserId";
             List<User> users = null;
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
@@ -39,10 +39,9 @@ namespace Spotifly.Models
             }
             return users;
         }
-
         public static User SelectByEmailForAuth(string email)
         {
-            string sql = "SELECT id, name, email, password, date_created FROM user WHERE email = @Email";
+            string sql = "SELECT id, name, email, password, date_created DateCreated FROM user WHERE email = @Email";
             User user = null;
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
@@ -51,10 +50,9 @@ namespace Spotifly.Models
             }
             return user;
         }
-
         public static User SelectByEmail(string email)
         {
-            string sql = "SELECT id, name, email, date_created FROM user WHERE email = @Email";
+            string sql = "SELECT id, name, email, date_created DateCreated FROM user WHERE email = @Email";
             User user = null;
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
@@ -67,7 +65,7 @@ namespace Spotifly.Models
         public static User InsertUser(string name, string email, string password, DateTime dateCreated)
         {
             string insert = "INSERT INTO user (name, email, password, date_created) VALUES (@Name, @Email, @Password, @DateCreated)";
-            string select = "SELECT id, name, email, date_created FROM user WHERE email = @Email";
+            string select = "SELECT id, name, email, date_created DateCreated FROM user WHERE email = @Email";
             User user = null;
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())
@@ -79,7 +77,7 @@ namespace Spotifly.Models
             return user;
         }
 
-        public static bool UpdatePassword(int id, string password)
+        public static bool UpdatePassword(Int64 id, string password)
         {
             string sql = "UPDATE user SET password=@Password where id=@Id";
             bool success = false;
@@ -103,7 +101,7 @@ namespace Spotifly.Models
             }
             return success;
         }
-        public static bool UpdateEmail(int id, string email)
+        public static bool UpdateEmail(Int64 id, string email)
         {
             string sql = "UPDATE user SET email=@Email where id=@Id";
             bool success = false;
