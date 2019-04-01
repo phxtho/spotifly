@@ -15,8 +15,6 @@ namespace Spotifly.Controllers
 {
     public class SpotiflyController : Controller
     {
-        private ISpotifyWebAPI spotifyWebAPI;
-
         public SpotiflyController(ISpotifyWebAPI spotifyWebAPI_instance)
         {
         }
@@ -27,8 +25,8 @@ namespace Spotifly.Controllers
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             ViewData["TopGenre"] = GenerateUserGenreChart(UsersTopGenres(api));
-            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
-            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
+            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, 5);
+            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, 5);
 
             return View();
         }
@@ -89,7 +87,7 @@ namespace Spotifly.Controllers
             chart.Type = "bar";
 
             Data data = new Data();
-            data.Labels = genres.Keys.ToList().GetRange(0, genres.Keys.ToList().Count);
+            data.Labels = genres.Keys.ToList().GetRange(0, 5);
 
             BarDataset dataset = new BarDataset()
             {
@@ -179,10 +177,8 @@ namespace Spotifly.Controllers
 
             Data data = new Data();
             data.Labels = new List<string>() { "Acousticness", "Instrumentalness", "Speechness", "Danceability", "Energy", "Liveness", "Valence" };
-
             RadarDataset dataset1 = new RadarDataset()
             {
-                Label = "Track " + features.Id,
                 BackgroundColor = "rgba(179,181,198,0.2)",
                 BorderColor = "rgba(179,181,198,1)",
                 PointBackgroundColor = new List<string>() { "rgba(179,181,198,1)" },
@@ -194,7 +190,6 @@ namespace Spotifly.Controllers
 
             data.Datasets = new List<Dataset>();
             data.Datasets.Add(dataset1);
-
             chart.Data = data;
             return chart;
         }
