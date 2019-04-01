@@ -19,7 +19,9 @@ namespace Spotifly.Controllers
 
 
         // GET: Spotifly
-        public ActionResult Index()
+        [Route("Spotifly")]
+        [Route("Spotifly/Statistics")]
+        public ActionResult Statistics()
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             ViewData["TopGenre"] = ChartGen.GenerateUserGenreChart(UsersTopGenres(api));
@@ -53,6 +55,12 @@ namespace Spotifly.Controllers
                 return RedirectToAction();
             }
            
+        }
+
+        [Route("Spotifly/Recommendations")]
+        public IActionResult Recommendations()
+        {
+            return View();
         }
 
         #region PrivateMethods
