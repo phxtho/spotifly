@@ -62,12 +62,14 @@
                             ISpotifyWebAPI spotifyWebAPI = (ISpotifyWebAPI)ViewData["SpotifyWebAPI"];
                             trackDetails = spotifyWebAPI.GetTrack(recTrack.Id);
                         }
+                        <div class="container">
                             <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@recTrack.Id>
                             <img src="@trackDetails.Album.Images.First().Url" ; width="100" height="100" class="image" />
                                 <div class="middle">
                                     <img src="~/images/playicon.png" ; width="100" height="100" />
                                 </div>
                             </a>
+                        </div>
                     </td>
                     <td>
 
