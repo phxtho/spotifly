@@ -46,7 +46,6 @@ namespace Spotifly.Controllers
 
             ViewData["PieChart"] = GeneratePieChart();
             ViewData["Users"] = Models.User.SelectAll();
-
             return View();
         }
 
@@ -77,13 +76,22 @@ namespace Spotifly.Controllers
         {
             IFormCollection form = HttpContext.Request.Form;
 
-            if (SpotifyAuth.LogInUser(form["email"], form["password"], HttpContext.Session))
+            try
             {
-                Response.Redirect("/Home");
-                Index();
-                return View("Index");
+                if (SpotifyAuth.LogInUser(form["email"], form["password"], HttpContext.Session))
+                {
+                    Response.Redirect("/Home");
+                    Index();
+                    return View("Index");
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = "Incorrect password.";
+                }
+            } catch(Exception e)
+            {
+                ViewData["ErrorMessage"] = "Email not found.";
             }
-            Response.Redirect("/Home/Login");
             return View("Login");
         }
 
@@ -100,13 +108,23 @@ namespace Spotifly.Controllers
             IFormCollection form = Request.Form;
 
             Console.WriteLine($"{form["name"]}, {form["email"]}, {form["password1"]}, {form["password2"]}");
-            if (SpotifyAuth.RegisterUser(form["name"], form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
+            try
             {
-                Response.Redirect("/Home");
-                Index();
-                return View("Index");
+                if (SpotifyAuth.RegisterUser(form["name"], form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
+                {
+                    Response.Redirect("/Home");
+                    Index();
+                    return View("Index");
+                }
+                else
+                {
+                    ViewData["ErrorMessage"] = "Passwords don't match";
+                }
             }
-            Response.Redirect("/Home/Registration");
+            catch (Exception e)
+            {
+                ViewData["ErrorMessage"] = "Something went wrong while registering your account :( Maybe you already have one.";
+            }
             return View("Register");
         }
 

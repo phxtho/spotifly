@@ -44,7 +44,7 @@ namespace Spotifly.Models
         public static UserToken UpdateToken(Int64 id, string accessToken, string refreshToken, DateTime dateCreated)
         {
             UserToken userToken = null;
-            string update = "UPDATE user_token set access_token, refresh_token, date_created) VALUES (@AccessToken, @RefreshToken, @DateCreated) WHERE id = @Id";
+            string update = "UPDATE user_token set access_token = @AccessToken, refresh_token = @RefreshToken, date_created = @DateCreated WHERE id = @Id";
             string select = "SELECT id, access_token AccessToken, refresh_token RefreshToken, date_created DateCreated FROM user_token WHERE id = @Id";
 
             using (MySqlConnection conn = SpotiflyDB.NewConnection())

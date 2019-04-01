@@ -15,14 +15,19 @@
 <h1>TrackDetails</h1>
 
 <body>
-    <img src="@track.Album.Images.First().Url" ; width="500" height="500" style="vertical-align:bottom">
-    <p>
-        @track.Name
-
-    </p>
-    <h3>Audio Features</h3>
-
-    <div><canvas id="radarPlot"></canvas></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2 class="mt-0 mb-1"> @track.Name</h2>
+                <img class="ml-3" src="@track.Album.Images.First().Url" alt="@track.Name" ; width="500" height="500" style="vertical-align:bottom">
+            </div>
+            <div class="col">
+                <h2 class="mt-0 mb-1">Audio Features</h2>
+                <div><canvas id="radarPlot" style="display: block; height: 500px; width: 525px;"></canvas></div>
+            </div>
+        </div>
+    </div>
+    
     @section Scripts {
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
         <script>
@@ -35,7 +40,7 @@
         <thead>
             <tr>
                 <th>
-                    IMG
+                    
                 </th>
                 <th>
                     Name

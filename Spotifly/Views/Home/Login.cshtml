@@ -2,6 +2,13 @@
     ViewData["Title"] = "Dashboard";
 }
 
+@if (ViewData["ErrorMessage"] != null) {
+  <div class="alert alert-danger">
+    <strong>Error!</strong> @ViewData["ErrorMessage"]
+  </div>
+}
+
+
 <form method="POST" action"/Home/Login">
   <div class="form-group">
     <label for="email">Email address</label>
