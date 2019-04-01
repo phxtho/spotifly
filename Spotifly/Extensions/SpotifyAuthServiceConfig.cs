@@ -24,6 +24,9 @@ namespace Spotifly.Extensions
                    // context.HandleResponse();
                    return Task.CompletedTask;
                };
+               options.Scope.Add("user-read-recently-played");
+               options.Scope.Add("user-read-email");
+               options.Scope.Add("user-library-read");
 
                options.Events.OnCreatingTicket = (ctx) =>
                {
