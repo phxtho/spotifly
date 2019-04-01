@@ -46,6 +46,9 @@ namespace Spotifly.Controllers
 
             ViewData["PieChart"] = GeneratePieChart();
             ViewData["Users"] = Models.User.SelectAll();
+            ViewData["Playlists"] = api.GetUserPlaylists(api.GetPrivateProfile().Id); 
+            ViewData["RecentlyPlayed"]= api.GetUsersRecentlyPlayedTracks().Items.GetRange(0, api.GetUsersRecentlyPlayedTracks().Items.Count);
+
             return View();
         }
 
@@ -165,6 +168,7 @@ namespace Spotifly.Controllers
                 Label = "My dataset",
                 BackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
                 HoverBackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
+                
                 Data = new List<double>() { 300, 50, 100 }
             };
 
