@@ -25,6 +25,8 @@ namespace Spotifly.Controllers
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             ViewData["TopGenre"] = ChartGen.GenerateUserGenreChart(UsersTopGenres(api));
+            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
+            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
 
             List<FullArtist> topArtists = api.GetUsersTopArtists().Items;
             int artistCount = (topArtists.Count > 5) ? 5 : topArtists.Count;
@@ -54,6 +56,26 @@ namespace Spotifly.Controllers
                 return RedirectToAction();
             }
            
+        }
+
+        [Route("Spotifly/ArtistDetails")]
+        public ActionResult ArtistDetails(string id)
+        {
+            try
+            {
+                ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+                ViewData["Artist"] = api.GetArtist(id);
+                ViewData["RecommendedArtist"] = api.GetRelatedArtists(id);//or artist, possible break point
+                ViewData["SpotifyWebAPI"] = api;
+               // ViewData["RadarPlot"] = ChartGen.GenerateAudioFeaturesChart(api.GetAudioFeatures(id));
+
+                return View();
+            }
+            catch
+            {
+                return RedirectToAction();
+            }
+
         }
 
         [Route("Spotifly/Recommendations")]

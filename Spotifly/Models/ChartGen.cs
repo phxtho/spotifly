@@ -129,23 +129,23 @@ namespace Spotifly.Models
                 Scales = new Scales() {
                     XAxes = new List<Scale>() {
                         new RadialScale(){
-                            GridLines = new GridLine(){
-                                DrawBorder = false
-                            }
-
+                            Ticks = new Tick(){
+                                Display = false
+                            },
+                            Display = false
                         }
                     },
                     YAxes = new List<Scale>() {
                         new RadialScale(){
-                            GridLines = new GridLine(){
-                                DrawBorder = false
-                            }
-                            
+                            Ticks = new Tick(){
+                                Display = false
+                            },
+                            Display = false
                         }
                     }
                 }
             };
-
+            
             chart.Options = options;
 
             return chart;
