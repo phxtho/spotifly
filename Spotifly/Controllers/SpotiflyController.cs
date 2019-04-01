@@ -49,6 +49,26 @@ namespace Spotifly.Controllers
            
         }
 
+        [Route("Spotifly/ArtistDetails")]
+        public ActionResult ArtistDetails(string id)
+        {
+            try
+            {
+                ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+                ViewData["Artist"] = api.GetArtist(id);
+                ViewData["RecommendedArtist"] = api.GetRecommendations(artistSeed: new List<string>() { id }).Tracks;//or artist, possible break point
+                ViewData["SpotifyWebAPI"] = api;
+                ViewData["RadarPlot"] = ChartGen.GenerateAudioFeaturesChart(api.GetAudioFeatures(id));
+
+                return View();
+            }
+            catch
+            {
+                return RedirectToAction();
+            }
+
+        }
+
         #region PrivateMethods
 
         public Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
