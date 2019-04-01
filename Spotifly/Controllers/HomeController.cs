@@ -46,23 +46,13 @@ namespace Spotifly.Controllers
 
             ViewData["PieChart"] = GeneratePieChart();
             ViewData["Users"] = Models.User.SelectAll();
+            ViewData["Playlists"] = api.GetUserPlaylists(api.GetPrivateProfile().Id); 
+            ViewData["RecentlyPlayed"]= api.GetUsersRecentlyPlayedTracks().Items.GetRange(0, api.GetUsersRecentlyPlayedTracks().Items.Count);
+
             return View();
         }
 
         public IActionResult About() => View();
-
-
-        [Route("Home/Statistics")]
-        public IActionResult Statistics()
-        {
-            return View();
-        }
-
-        [Route("Home/Recommendations")]
-        public IActionResult Recommendations()
-        {
-            return View();
-        }
 
         [Route("Home/Login")]
         public IActionResult Login()
@@ -88,7 +78,10 @@ namespace Spotifly.Controllers
                 {
                     ViewData["ErrorMessage"] = "Incorrect password.";
                 }
-            } catch(Exception e)
+            }
+            #pragma warning disable 0168
+            catch (Exception e)
+            #pragma warning restore 0168
             {
                 ViewData["ErrorMessage"] = "Email not found.";
             }
@@ -107,10 +100,9 @@ namespace Spotifly.Controllers
         {
             IFormCollection form = Request.Form;
 
-            Console.WriteLine($"{form["name"]}, {form["email"]}, {form["password1"]}, {form["password2"]}");
             try
             {
-                if (SpotifyAuth.RegisterUser(form["name"], form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
+                if (SpotifyAuth.RegisterUser(form["email"], form["password1"], form["password2"], DateTime.Now, HttpContext.Session))
                 {
                     Response.Redirect("/Home");
                     Index();
@@ -121,11 +113,20 @@ namespace Spotifly.Controllers
                     ViewData["ErrorMessage"] = "Passwords don't match";
                 }
             }
+            #pragma warning disable 0168
             catch (Exception e)
+            #pragma warning restore 0168
             {
                 ViewData["ErrorMessage"] = "Something went wrong while registering your account :( Maybe you already have one.";
             }
             return View("Register");
+        }
+
+        [Route("Home/Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return View("Login");
         }
 
 
@@ -154,6 +155,7 @@ namespace Spotifly.Controllers
                 Label = "My dataset",
                 BackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
                 HoverBackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
+                
                 Data = new List<double>() { 300, 50, 100 }
             };
 

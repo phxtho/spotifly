@@ -27,7 +27,9 @@ namespace Spotifly.Models
                 {
                     friendRequest = conn.QuerySingle(select, new { SenderId = senderId, ReceiverId = receiverId});
                 }
+                #pragma warning disable 0168
                 catch (Exception e)
+                #pragma warning restore 0168
                 {
                     friendRequest = null;
                 }

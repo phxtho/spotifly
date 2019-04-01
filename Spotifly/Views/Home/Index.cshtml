@@ -1,4 +1,7 @@
-﻿@{
+﻿@using ChartJSCore.Models;
+@using SpotifyAPI.Web.Models;
+
+@{
     ViewData["Title"] = "Dashboard";
 }
 
@@ -7,7 +10,10 @@
 
 <div><canvas id="pieChart"></canvas></div>
 
-@{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; }
+@{ChartJSCore.Models.Chart pieChart = (ChartJSCore.Models.Chart)ViewData["PieChart"]; 
+    Paging<SimplePlaylist> playlists = (Paging<SimplePlaylist>)ViewData["Playlists"];
+    List<PlayHistory> recentlyPlayed = (List<PlayHistory>)ViewData["RecentlyPlayed"];
+}
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
@@ -15,3 +21,49 @@
         @Html.Raw(pieChart.CreateChartCode("pieChart"));
     </script>
 }
+
+<h2>Recently Played Tracks</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                IMG
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                ID
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in recentlyPlayed)
+        {
+            <tr>
+                <td>
+                    <p>image</p>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelTrack => item.Track.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelTrack => item.Track.Id)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Playlists</h2>
+@foreach (var playlist in playlists.Items)
+        {
+            <span>
+                 @Html.DisplayFor(modelTrack => playlist.Name)
+                 <iframe src="@playlist.Href"></iframe>
+                 <iframe src="@playlist.Href" frameborder="0"  allow="encrypted-media"></iframe>
+                 <iframe src="https://open.spotify.com/embed/playlist/6dxTFd1Sc7MgvyxgZwjncB" width="100%" height="250" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </span>
+        }
+
