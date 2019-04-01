@@ -121,6 +121,32 @@ namespace Spotifly.Models
             data.Datasets = new List<Dataset>();
             data.Datasets.Add(dataset1);
             chart.Data = data;
+
+            RadarOptions options = new RadarOptions()
+            {
+
+                Scales = new Scales() {
+                    XAxes = new List<Scale>() {
+                        new RadialScale(){
+                            GridLines = new GridLine(){
+                                DrawBorder = false
+                            }
+
+                        }
+                    },
+                    YAxes = new List<Scale>() {
+                        new RadialScale(){
+                            GridLines = new GridLine(){
+                                DrawBorder = false
+                            }
+                            
+                        }
+                    }
+                }
+            };
+
+            chart.Options = options;
+
             return chart;
         }
     }
