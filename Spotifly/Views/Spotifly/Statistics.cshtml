@@ -36,20 +36,20 @@
     <tbody>
         @foreach (var artist in artists)
         {
-            <tr>
-                <td>
+        <tr>
+            
+            <td>
                     <a asp-area="" asp-controller="Spotifly" asp-action="ArtistDetails" asp-route-id=@artist.Id>
                         <img src="@artist.Images.First().Url" ; width="100" height="100" />
                     </a>
-                </td>
-                <td>
+            </td>
+            <td>
                     @Html.DisplayFor(modelArtist => artist.Name)
-                </td>
-                <td>
+            </td>
+            <td>
                     @Html.DisplayFor(modelArtist => artist.Id)
-                </td>
-
-            </tr>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
@@ -65,7 +65,7 @@
                 Name
             </th>
             <th>
-                ID
+                Album
             </th>
         </tr>
     </thead>
@@ -79,12 +79,15 @@
                     </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelTrack => track.Name)
+                    <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@track.Id>
+                        @Html.DisplayFor(modelTrack => track.Name)
+                        </a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelTrack => track.Id)
+                    <a asp-area="" asp-controller="Spotifly" asp-action="TrackDetails" asp-route-id=@track.Id>
+                        @Html.DisplayFor(modelTrack => track.Album.Name)
+                    </a>                        
                 </td>
-
             </tr>
         }
     </tbody>

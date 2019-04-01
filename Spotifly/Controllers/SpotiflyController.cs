@@ -92,8 +92,6 @@ namespace Spotifly.Controllers
             return orderedGenres;
         }
 
-       
-
         #endregion
     }
 }
