@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Spotifly.Models;
 
 namespace Spotifly.Controllers
 {
@@ -18,16 +19,16 @@ namespace Spotifly.Controllers
 
         public SpotiflyController(ISpotifyWebAPI spotifyWebAPI_instance)
         {
-            this.spotifyWebAPI = spotifyWebAPI_instance;
         }
 
 
         // GET: Spotifly
         public ActionResult Index()
         {
-            ViewData["TopGenre"] = GenerateUserGenreChart(UsersTopGenres());
-            ViewData["TopArtists"] = spotifyWebAPI.GetUsersTopArtists().Items.GetRange(0, spotifyWebAPI.GetUsersTopArtists().Items.Count);
-            ViewData["TopTracks"] = spotifyWebAPI.GetUsersTopTracks().Items.GetRange(0, spotifyWebAPI.GetUsersTopArtists().Items.Count);
+            ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+            ViewData["TopGenre"] = GenerateUserGenreChart(UsersTopGenres(api));
+            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
+            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, api.GetUsersTopArtists().Items.Count);
 
             return View();
         }
@@ -37,10 +38,11 @@ namespace Spotifly.Controllers
         {
             try
             {
-                ViewData["Track"] = spotifyWebAPI.GetTrack(id);
-                ViewData["RecommendedTracks"] = spotifyWebAPI.GetRecommendations(trackSeed: new List<string>() { id }).Tracks;
-                ViewData["SpotifyWebAPI"] = this.spotifyWebAPI;
-                ViewData["RadarPlot"] = GenerateAudioFeaturesChart(spotifyWebAPI.GetAudioFeatures(id));
+                ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
+                ViewData["Track"] = api.GetTrack(id);
+                ViewData["RecommendedTracks"] = api.GetRecommendations(trackSeed: new List<string>() { id }).Tracks;
+                ViewData["SpotifyWebAPI"] = api;
+                ViewData["RadarPlot"] = GenerateAudioFeaturesChart(api.GetAudioFeatures(id));
 
                 return View();
             }
@@ -53,10 +55,10 @@ namespace Spotifly.Controllers
 
         #region PrivateMethods
 
-        public Dictionary<string, int> UsersTopGenres()
+        public Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
         {
             //Get Users Top Artists
-            List<FullArtist> topArtists = spotifyWebAPI.GetUsersTopArtists().Items;
+            List<FullArtist> topArtists = api.GetUsersTopArtists().Items;
 
             //Get the genre
             Dictionary<string, int> usersTopGenres = new Dictionary<string, int>();
