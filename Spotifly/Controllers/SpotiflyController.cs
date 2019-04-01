@@ -60,9 +60,31 @@ namespace Spotifly.Controllers
         [Route("Spotifly/Recommendations")]
         public IActionResult Recommendations()
         {
-            return View();
-        }
+            ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
 
+            List<PlayHistory> recent = api.GetUsersRecentlyPlayedTracks().Items;
+            int recentPlayed = (recent.Count > 5) ? 5 : recent.Count;
+            List<PlayHistory> myRecent = recent.GetRange(0, recentPlayed);
+
+            List<FullTrack> topTracks = api.GetUsersTopTracks().Items;
+            int trackCount = (topTracks.Count > 5) ? 5 : topTracks.Count;
+            List<FullTrack> myTracks = topTracks.GetRange(0, trackCount);
+
+            List<SimpleTrack> vTracks = new List<SimpleTrack>();
+            List<string> id = new List<string>();
+
+            foreach (var track in myRecent)
+            {
+                id.Add(track.Track.Id);
+            }
+            foreach (var track in myTracks)
+            {
+                id.Add(track.Id);
+            }
+            vTracks = api.GetRecommendations(trackSeed: id).Tracks;
+
+            return View(vTracks);
+        }
         #region PrivateMethods
 
         private Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)

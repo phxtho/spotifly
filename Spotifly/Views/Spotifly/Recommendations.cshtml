@@ -1,7 +1,49 @@
-﻿
+﻿@model IEnumerable<SpotifyAPI.Web.Models.SimpleTrack>
+
 @{
     ViewData["Title"] = "Recommendations";
 }
 
 <h1>Recommendations</h1>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                TRACK NUMBER
+            </th>
+            <th>
+                ID
+            </th>
+            <th>
+                NAME
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrackNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Listen to now >>", "Edit", new { /* id=item.PrimaryKey */ })
+                </td>
+                <td>
+                    @Html.ActionLink("Add to your playlist", "Edit", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
