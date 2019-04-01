@@ -40,6 +40,15 @@ button.accept-policy {
     color: black !important;
 }
 
+/* Home page */
+.playlist-iframe {
+    width: 100% !important;
+}
+
+.playlist-scrollbar {
+    overflow-y: auto;
+    height: 480px;
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */
