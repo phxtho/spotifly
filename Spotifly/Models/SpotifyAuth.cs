@@ -82,13 +82,11 @@ namespace Spotifly.Models
 
         private static string HashPassword(string password, DateTime dateTime)
         {
-            string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss");
-            byte[] salt = Encoding.ASCII.GetBytes(dateTimeStr);
-            return Encoding.ASCII.GetString(KeyDerivation.Pbkdf2(password
-                , salt
-                , KeyDerivationPrf.HMACSHA256
-                , 1000,
-                128));
+            string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss.fff");
+            byte[] bytes = Encoding.Unicode.GetBytes(password + dateTimeStr);
+            SHA256Managed hashstring = new SHA256Managed();
+            byte[] hash = hashstring.ComputeHash(bytes);
+            return Convert.ToBase64String(hash);
         }
         
         public static Token CreateUserToken(Int64 userId)
