@@ -23,8 +23,14 @@ namespace Spotifly.Controllers
         {
             ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             ViewData["TopGenre"] = ChartGen.GenerateUserGenreChart(UsersTopGenres(api));
-            ViewData["TopArtists"] = api.GetUsersTopArtists().Items.GetRange(0, 5);
-            ViewData["TopTracks"] = api.GetUsersTopTracks().Items.GetRange(0, 5);
+
+            List<FullArtist> topArtists = api.GetUsersTopArtists().Items;
+            int artistCount = (topArtists.Count > 5) ? 5 : topArtists.Count;
+            ViewData["TopArtists"] = topArtists.GetRange(0,artistCount);
+
+            List<FullTrack> topTracks = api.GetUsersTopTracks().Items;
+            int trackCount = (topTracks.Count > 5) ? 5 : topTracks.Count;
+            ViewData["TopTracks"] = topTracks.GetRange(0, trackCount);
 
             return View();
         }
@@ -51,7 +57,7 @@ namespace Spotifly.Controllers
 
         #region PrivateMethods
 
-        public Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
+        private Dictionary<string, int> UsersTopGenres(ISpotifyWebAPI api)
         {
             //Get Users Top Artists
             List<FullArtist> topArtists = api.GetUsersTopArtists().Items;

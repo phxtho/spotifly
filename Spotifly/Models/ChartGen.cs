@@ -16,7 +16,8 @@ namespace Spotifly.Models
             chart.Type = "bar";
 
             Data data = new Data();
-            data.Labels = genres.Keys.ToList().GetRange(0, 5);
+            int upperLimit = genres.Count > 5 ? 5 : genres.Count;
+            data.Labels = genres.Keys.ToList().GetRange(0, upperLimit);
 
             BarDataset dataset = new BarDataset()
             {
@@ -105,7 +106,7 @@ namespace Spotifly.Models
             chart.Type = "radar";
 
             Data data = new Data();
-            data.Labels = new List<string>() { "Acousticness", "Instrumentalness", "Speechness", "Danceability", "Energy", "Liveness", "Valence" };
+            data.Labels = new List<string>() { "Acousticness", "Instrumentalness", "Speechiness", "Danceability", "Energy", "Liveness", "Valence" };
             RadarDataset dataset1 = new RadarDataset()
             {
                 BackgroundColor = "rgba(179,181,198,0.2)",
