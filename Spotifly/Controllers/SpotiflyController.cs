@@ -33,7 +33,6 @@ namespace Spotifly.Controllers
             List<FullTrack> topTracks = api.GetUsersTopTracks().Items;
             int trackCount = (topTracks.Count > 5) ? 5 : topTracks.Count;
             ViewData["TopTracks"] = topTracks.GetRange(0, trackCount);
-
             return View();
         }
 
