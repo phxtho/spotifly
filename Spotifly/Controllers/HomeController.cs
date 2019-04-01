@@ -54,19 +54,6 @@ namespace Spotifly.Controllers
 
         public IActionResult About() => View();
 
-
-        [Route("Home/Statistics")]
-        public IActionResult Statistics()
-        {
-            return View();
-        }
-
-        [Route("Home/Recommendations")]
-        public IActionResult Recommendations()
-        {
-            return View();
-        }
-
         [Route("Home/Login")]
         public IActionResult Login()
         {
