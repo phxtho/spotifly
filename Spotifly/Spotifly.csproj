@@ -5,6 +5,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\css\main.css" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="ChartJSCore" Version="1.3.2" />
