@@ -83,7 +83,7 @@ namespace Spotifly.Models
         private static string HashPassword(string password, DateTime dateTime)
         {
             string dateTimeStr = dateTime.ToString("yyyy/MM/dd HH:mm:ss.fff");
-            byte[] bytes = Encoding.Unicode.GetBytes(password + dateTimeStr);
+            byte[] bytes = Encoding.Unicode.GetBytes(password);
             SHA256Managed hashstring = new SHA256Managed();
             byte[] hash = hashstring.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
