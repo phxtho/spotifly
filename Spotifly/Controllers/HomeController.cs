@@ -131,6 +131,11 @@ namespace Spotifly.Controllers
         [Route("Home/Logout")]
         public IActionResult Logout()
         {
+            if (HttpContext.Session.GetString("userId") == null)
+            {
+                Response.Redirect("/Home/Login");
+                return View("Login");
+            }
             HttpContext.Session.Clear();
             return View("Login");
         }
@@ -138,6 +143,11 @@ namespace Spotifly.Controllers
 
         public IActionResult Privacy()
         {
+            if (HttpContext.Session.GetString("userId") == null)
+            {
+                Response.Redirect("/Home/Login");
+                return View("Login");
+            }
             return View();
         }
 
