@@ -67,6 +67,10 @@ html {
     height: auto;
 }
 
+.music-icon{
+    max-width: 2em;
+    height: auto;
+}
 .spotifly {
     font: 36 !important;
     font-style: italic;

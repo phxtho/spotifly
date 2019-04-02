@@ -158,21 +158,28 @@ namespace Spotifly.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public static Chart GeneratePieChart()
-        {
+        public Chart GeneratePieChart()
+        {  
+            ISpotifyWebAPI api = SpotifyAuth.FetchUserEndpoint(HttpContext.Session);
             Chart chart = new Chart();
             chart.Type = "pie";
-
+           
+            Paging<FullArtist> TopArtists= api.GetUsersTopArtists(TimeRangeType.MediumTerm,200);
+            Paging<FullTrack> TopTracks= api.GetUsersTopTracks(TimeRangeType.MediumTerm,200);
+            CategoryList TopCategories= api.GetCategories("South Africa","",200);
+            Double artistCount= (TopArtists== null)?0:TopArtists.Items.Count();
+            Double trackCount= (TopTracks==null)?0:TopTracks.Items.Count();
+            Double categoryCount= 20;
             Data data = new Data();
-            data.Labels = new List<string>() { "Red", "Blue", "Yellow" };
-
+            data.Labels = new List<string>() { "Top Artists", "Top Tracks", "Categories" };
+            Console.WriteLine(artistCount);
+            Console.WriteLine(trackCount);
             PieDataset dataset = new PieDataset()
             {
                 Label = "My dataset",
                 BackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
                 HoverBackgroundColor = new List<string>() { "#FF6384", "#36A2EB", "#FFCE56" },
-                
-                Data = new List<double>() { 300, 50, 100 }
+                Data = new List<double>() { artistCount,trackCount, categoryCount }
             };
 
             data.Datasets = new List<Dataset>();
